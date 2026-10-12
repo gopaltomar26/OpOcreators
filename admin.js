@@ -25,6 +25,10 @@ module.exports = async (req, res) => {
       const { id, action } = req.body || {};
       if (!id) return res.status(400).json({ error: "Missing id" });
       if (action === "delete") {
+        const cur = await redis(["HGET", "applications", id]);
+        if (cur) {
+          try { await redis(["HDEL", "users", String(JSON.parse(cur).data.email).toLowerCase()]); } catch (e) {}
+        }
         await redis(["HDEL", "applications", id]);
         return res.status(200).json({ ok: true });
       }

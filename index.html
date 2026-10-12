@@ -152,13 +152,43 @@ details{border-bottom:1px solid #1f1b4d;padding:16px 0}summary{cursor:pointer;fo
 @media(max-width:760px){.bento{grid-template-columns:1fr}.bx.w{grid-column:auto}.glow{display:none}}
 @media(hover:none){.glow{display:none}}
 @media(prefers-reduced-motion:reduce){.mq div{animation:none}}
+.na,#auth{display:flex;gap:10px;align-items:center}
+.lk{background:none;border:0;color:var(--ice);font:500 14px var(--b);cursor:pointer;padding:8px}
+.pf{position:relative;perspective:800px}
+.pc{display:flex;align-items:center;gap:8px;border:1px solid #2f2a63;background:rgba(255,255,255,.06);color:var(--ice);border-radius:99px;padding:5px 14px 5px 5px;font:500 14px var(--b);cursor:pointer;animation:pop .6s cubic-bezier(.2,.8,.2,1)}
+.pc i{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font:800 13px var(--d);font-style:normal;background:linear-gradient(135deg,var(--violet),var(--cy));color:#05060f}
+@keyframes pop{from{transform:scale(.6) rotateY(80deg);opacity:0}}
+.pm{position:absolute;right:0;top:calc(100% + 10px);width:250px;padding:16px;border-radius:18px;background:linear-gradient(160deg,#241d57,#150f36);border:1px solid #4a3fa0;box-shadow:0 0 40px rgba(124,92,255,.3);transform-origin:top right;display:none}
+.pm.on{display:block;animation:flp .3s ease}
+@keyframes flp{from{transform:rotateX(-40deg);opacity:0}}
+.pm b{display:block;font:800 17px var(--d)}.pm small{display:block;color:var(--mute);word-break:break-all;margin-bottom:10px}
+.pm .tg{display:inline-block;border-radius:99px;padding:3px 11px;font-size:12px;border:1px solid #4a3fa0;margin:0 6px 12px 0}
+.pm .tg.pending{color:var(--peach);border-color:var(--peach)}.pm .tg.approved{color:#34d399;border-color:#34d399}.pm .tg.rejected{color:#f87171;border-color:#f87171}
+.pm .btn{width:100%}
+@media(max-width:560px){.pc span{display:none}.pc{padding:5px}}
+@media(prefers-reduced-motion:reduce){.pc,.pm.on{animation:none}}
+.note{color:var(--mute);font-size:14px;margin:0 0 16px}
+.modal a{color:var(--cy)}
+.fld textarea{width:100%;padding:12px 14px;border-radius:12px;border:1.5px solid #4a3fa0;background:#120e2b;color:var(--ice);font:400 15px var(--b);resize:vertical}
+.pc{position:relative}.pc.dot::after{content:"";position:absolute;top:1px;right:1px;width:10px;height:10px;border-radius:50%;background:var(--peach)}
+.inb{display:grid;grid-template-columns:230px 1fr;gap:14px;min-height:340px}
+.cl{max-height:52vh;overflow:auto;display:flex;flex-direction:column;gap:8px}
+.ci{border:1px solid #3a3080;background:rgba(255,255,255,.04);border-radius:14px;padding:10px 12px;text-align:left;color:var(--ice);cursor:pointer;font:400 14px var(--b)}
+.ci.on{border-color:var(--cy)}.ci b{display:block}.ci small{color:var(--mute)}
+.th{display:flex;flex-direction:column;border:1px solid #3a3080;border-radius:16px;padding:12px;min-height:300px}
+.msgs{flex:1;overflow:auto;max-height:40vh;display:flex;flex-direction:column;gap:8px;padding:4px}
+.bub{max-width:80%;padding:9px 13px;border-radius:16px;background:#2a2560;word-break:break-word;white-space:pre-wrap}
+.bub.me{align-self:flex-end;background:linear-gradient(135deg,var(--violet),#5b8cff)}
+.bub time{display:block;font-size:11px;opacity:.7;margin-top:2px}
+.snd{display:flex;gap:8px;margin-top:10px}.snd input{flex:1}
+@media(max-width:560px){.inb{grid-template-columns:1fr}.cl{max-height:150px}}
 </style>
 </head>
 <body>
 <nav>
  <a class="logo" href="#top">Op<i>O</i>creators</a>
  <div class="l"><a href="#how">How it works</a><a href="#browse">Browse creators</a><a href="#features">Features</a><a href="#pricing">Pricing</a><a href="#join">For creators</a></div>
- <div style="display:flex;gap:10px"><a class="btn" href="#browse">Find creators</a><button class="btn p" onclick="openSignup()">Sign up</button></div>
+ <div class="na"><a class="btn" href="#browse">Find creators</a><span id="auth"></span></div>
 </nav>
 
 <header class="hero" id="top">
@@ -192,6 +222,7 @@ details{border-bottom:1px solid #1f1b4d;padding:16px 0}summary{cursor:pointer;fo
  <h2>Browse creators</h2>
  <label class="sort">Sort by <select onchange="sortBy=this.value;render()"><option value="rec">Recommended</option><option value="low">Price: low to high</option><option value="high">Price: high to low</option></select></label>
  <div class="chips" id="chips" role="group" aria-label="Filter by category"></div>
+ <p class="note" id="note"></p>
  <div class="grid" id="grid"></div>
 </section>
 
@@ -230,7 +261,7 @@ details{border-bottom:1px solid #1f1b4d;padding:16px 0}summary{cursor:pointer;fo
 <div class="toast" id="toast" role="status"></div>
 
 <script>
-const creators=[
+let creators=[
 ["Maya Rao","Beauty","UGC video",85,"#6c4bff,#ff9066"],
 ["Leo Hart","Fitness","Reels",120,"#ff9066,#c2397a"],
 ["Sana Iqbal","Food","TikTok",95,"#1f8f7a,#7be0a8"],
@@ -243,7 +274,7 @@ const creators=[
 ["Zoe Lin","Tech","UGC video",130,"#3d2fd1,#b66cff"],
 ["Ravi Nair","Fashion","Photo",100,"#222a5e,#ff9066"],
 ["Ella Moss","Travel","Reels",160,"#16897a,#6c4bff"]];
-const cats=["All",...new Set(creators.map(c=>c[1]))];
+let cats=["All",...new Set(creators.map(c=>c[1]))];
 let cat="All",term="";
 const $=id=>document.getElementById(id);
 const bg=g=>`linear-gradient(155deg,${g.split(",")[0]},${g.split(",")[1]})`;
@@ -292,17 +323,17 @@ let tt;function toast(m){const t=$("toast");t.textContent=m;t.classList.add("on"
 // ---- 3D sign-up flow ----
 const S="select",flows={
 client:[
-{t:"About you",s:"Tell us who we're talking to.",f:[["name","Full name","text"],["email","Work email","email"],["phone","Phone number","tel"]]},
+{t:"About you",s:"Tell us who we're talking to.",f:[["name","Full name","text"],["email","Work email","email"],["phone","Phone number","tel"],["password","Create a password (8+ characters)","password"]]},
 {t:"Your business",s:"We check this so creators only work with real brands.",f:[["biz","Business or brand name","text"],["web","Website or Instagram link","url"],["type","Business type",S,["D2C brand","Agency","Startup","Restaurant or local shop","Other"]]]},
 {t:"Your campaigns",s:"What you plan to book.",f:[["budget","Monthly budget",S,["Under $500","$500 – $2,000","$2,000 – $10,000","$10,000+"]],["need","Content you need",S,["UGC videos","Reels","Product photos","Ads"]],["reg","Business registration or GST number (optional, speeds up approval)","text",0,1]]}],
 creator:[
-{t:"About you",s:"Tell us who we're talking to.",f:[["name","Full name","text"],["email","Email","email"],["city","City","text"]]},
+{t:"About you",s:"Tell us who we're talking to.",f:[["name","Full name","text"],["email","Email","email"],["city","City","text"],["password","Create a password (8+ characters)","password"]]},
 {t:"Your channel",s:"We check your profile to confirm it's really yours.",f:[["platform","Main platform",S,["Instagram","TikTok","YouTube","Other"]],["handle","Profile link","url"],["followers","Followers","number"]]},
-{t:"Your work",s:"Show us what brands would get.",f:[["niche","Niche",S,["Beauty","Fitness","Food","Tech","Fashion","Travel","Other"]],["port","Link to your best work","url"],["rate","Starting price per video (USD)","number"]]}]};
+{t:"Your work",s:"Brands will see this on your public profile once you are approved.",f:[["niche","Niche",S,["Beauty","Fitness","Food","Tech","Fashion","Travel","Other"]],["port","Link to your best work","url"],["rate","Starting price per video (USD)","number"],["bio","About you, in one or two lines","text",0,1]]}]};
 let role,step,data={};
 const ov=$("ov"),mb=$("mbody"),esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-function openSignup(r){ov.classList.add("on");document.body.style.overflow="hidden";data={};mb.innerHTML="";r?pick(r):roles()}
-function closeSignup(){ov.classList.remove("on");document.body.style.overflow=""}
+function openSignup(r){if(me&&LS.get("opo_t")){toast("You are already signed up");return}ov.classList.add("on");document.body.style.overflow="hidden";data={};mb.innerHTML="";r?pick(r):roles()}
+function closeSignup(){clearInterval(chatT);cur=null;ov.classList.remove("on");document.body.style.overflow=""}
 addEventListener("keydown",e=>{if(e.key==="Escape")closeSignup()});
 function swap(html,after){const p=mb.firstElementChild,show=()=>{mb.innerHTML='<div class="panel in">'+html+'</div>';after&&after()};if(p){p.className="panel out";setTimeout(show,230)}else show()}
 function roles(){swap('<h2>Join OpOcreators</h2><p class="s">How will you use it?</p><div class="roles"><button class="role" style="background:linear-gradient(155deg,#6c4bff,#2d3fd1)" onclick="pick(\'client\')"><i class="orb"></i><b>I\'m a client</b><span>Book creators for my brand.</span></button><button class="role" style="background:linear-gradient(155deg,#ff9066,#c2397a)" onclick="pick(\'creator\')"><i class="orb"></i><b>I\'m a creator</b><span>Get hired and get paid.</span></button></div>',()=>{document.querySelectorAll(".role").forEach(b=>{b.onpointermove=e=>{const r=b.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;b.style.transform='rotateY('+x*18+'deg) rotateX('+-y*18+'deg)'};b.onpointerleave=()=>b.style.transform=""})})}
@@ -314,7 +345,7 @@ const inp=f[2]===S?'<select id="'+id+'"><option value="">Choose one</option>'+f[
 return '<div class="fld"><label for="'+id+'">'+f[1]+'</label>'+inp+'<div class="err" id="e_'+f[0]+'"></div></div>'}).join("");
 swap('<div class="bar">'+bar+'</div><h2>'+s.t+'</h2><p class="s">'+s.s+'</p>'+fs+'<div class="nav2"><button class="btn" onclick="back()">Back</button><button class="btn p" onclick="next()">'+(step===fl.length-1?"Submit application":"Continue")+'</button></div>',()=>{const i=mb.querySelector("input,select");i&&i.focus()})}
 function collect(){flows[role][step].f.forEach(f=>{const e=$("f_"+f[0]);if(e)data[f[0]]=e.value.trim()})}
-const chk={email:v=>/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)||"Enter a valid email address",tel:v=>v.replace(/\D/g,"").length>=8||"Enter a valid phone number",url:v=>/^(https?:\/\/)?[\w-]+(\.[\w-]+)+/i.test(v)||"Enter a link, like instagram.com/yourname",number:v=>Number(v)>=0||"Enter a number"};
+const chk={email:v=>/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)||"Enter a valid email address",tel:v=>v.replace(/\D/g,"").length>=8||"Enter a valid phone number",url:v=>/^(https?:\/\/)?[\w-]+(\.[\w-]+)+/i.test(v)||"Enter a link, like instagram.com/yourname",number:v=>Number(v)>=0||"Enter a number",password:v=>v.length>=8||"Use at least 8 characters"};
 function next(){collect();let ok=true;
 flows[role][step].f.forEach(f=>{const v=data[f[0]]||"",el=$("f_"+f[0]);let m="";
 if(!v){if(!f[4])m=f[2]===S?"Choose one":"This field is required"}else if(chk[f[2]]){const r=chk[f[2]](v);if(r!==true)m=r}
@@ -324,14 +355,17 @@ if(step<flows[role].length-1){step++;form()}else submit()}
 function back(){collect();if(step===0)roles();else{step--;form()}}
 async function submit(){
 const btn=mb.querySelector(".btn.p");if(btn){btn.disabled=true;btn.textContent="Sending..."}
-try{const r=await fetch("/api/signup",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({role,data})});if(!r.ok)throw 0}
-catch(e){if(btn){btn.disabled=false;btn.textContent="Submit application"}toast("Could not send. Please try again.");return}
+let j={};
+try{const r=await fetch("/api/signup",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({role,data})});j=await r.json().catch(()=>({}));if(!r.ok)throw j.error||0}
+catch(e){if(btn){btn.disabled=false;btn.textContent="Submit application"}
+if(typeof e==="string"&&/registered/.test(e)){toast(e);loginForm(data.email);return}
+toast(typeof e==="string"?e:"Could not send. Please try again.");return}
+setAuth(j.token,j.profile);
 const c=role==="client";
 swap('<div class="done"><div class="badge"></div><h2>Thanks, '+esc(data.name.split(" ")[0])+'. Your application is in.</h2><p class="s">'+(c?"We'll review "+esc(data.biz)+"'s website and email, then confirm your account within 1–2 days.":"We'll check your profile and portfolio, then confirm your creator account within 1–2 days.")+'</p><button class="btn p" onclick="closeSignup()">Back to site</button></div>')}
 // ---- polish and extra features ----
 let sortBy="rec";const favs=new Set();
 function fav(i){favs.has(i)?favs.delete(i):favs.add(i);toast(creators[i][0]+(favs.has(i)?" saved":" removed"));render()}
-function quick(i){const c=creators[i];ov.classList.add("on");document.body.style.overflow="hidden";swap('<div class="roles"><div class="role" style="background:'+bg(c[4])+';min-height:260px;cursor:default"><i class="orb"></i><b>'+esc(c[0])+'</b><span>'+c[1]+' · '+c[2]+'</span></div><div><h2>From $'+c[3]+'</h2><p class="s">Sample profile. Usually delivers in 3–5 days, with one revision included.</p><button class="btn p" onclick="pick(\'client\')">Book '+esc(c[0].split(" ")[0])+'</button> <button class="btn" onclick="fav('+i+')">'+(favs.has(i)?"Saved ♥":"Save ♡")+'</button></div></div>')}
 function bill(y){document.querySelectorAll(".tog button").forEach((b,i)=>b.setAttribute("aria-pressed",String(!!i===y)));document.querySelectorAll("[data-m]").forEach(e=>e.textContent=y?e.dataset.y:e.dataset.m)}
 const mqd=document.querySelector(".mq div");mqd.innerHTML+=mqd.innerHTML;
 const gl=document.createElement("div");gl.className="glow";document.body.appendChild(gl);
@@ -347,6 +381,110 @@ for(let i=0;i<70;i++)P.push([Math.random(),Math.random(),Math.random()*1.6+.4,Ma
 function f(){if(run&&!document.hidden){x.clearRect(0,0,w,h);P.forEach(p=>{p[1]-=p[3];if(p[1]<0)p[1]=1;x.fillStyle="rgba("+(p[2]>1.4?"34,211,238":"200,190,255")+","+(.25+p[2]/3)+")";x.beginPath();x.arc(p[0]*w,p[1]*h,p[2],0,6.3);x.fill()})}requestAnimationFrame(f)}
 if(!matchMedia("(prefers-reduced-motion:reduce)").matches)f();
 new IntersectionObserver(e=>{run=e[0].isIntersecting}).observe(c)})();
+// ---- accounts ----
+const LS={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},del:k=>{try{localStorage.removeItem(k)}catch(e){}}};
+let me=null;try{me=JSON.parse(LS.get("opo_me")||"null")}catch(e){}
+function setAuth(t,p){if(t){LS.set("opo_t",t);LS.set("opo_member","1")}if(p){me=p;LS.set("opo_me",JSON.stringify(p))}renderAuth();refreshBadge()}
+function logout(){LS.del("opo_t");LS.del("opo_me");me=null;renderAuth();toast("Logged out")}
+function renderAuth(){
+ const a=$("auth");
+ if(me&&LS.get("opo_t")){const ini=esc((me.name||"?").split(" ").map(w=>w[0]).slice(0,2).join("").toUpperCase());
+  a.innerHTML='<div class="pf"><button class="pc" aria-haspopup="true" aria-expanded="false" onclick="pmenu(this)"><i>'+ini+'</i><span>'+esc((me.name||"").split(" ")[0])+'</span></button><div class="pm" id="pm"><b>'+esc(me.name)+'</b><small>'+esc(me.email)+'</small><span class="tg">'+esc(me.role)+'</span><span class="tg '+esc(me.status)+'">'+(me.status==="pending"?"under review":esc(me.status))+'</span>'+(me.status==="approved"?'<button class="btn" style="margin-bottom:8px" onclick="openInbox()">Messages<span id="mbadge"></span></button>':'<small style="margin:0 0 10px">Messages unlock once your account is approved.</small>')+'<button class="btn" onclick="logout()">Log out</button></div></div>'}
+ else if(LS.get("opo_member"))a.innerHTML='<button class="btn p" onclick="loginForm()">Log in</button>';
+ else a.innerHTML='<button class="lk" onclick="loginForm()">Log in</button><button class="btn p" onclick="openSignup()">Sign up</button>'}
+function pmenu(b){const o=$("pm").classList.toggle("on");b.setAttribute("aria-expanded",o)}
+addEventListener("click",e=>{const m=$("pm");if(m&&!e.target.closest(".pf"))m.classList.remove("on")});
+function loginForm(email){
+ ov.classList.add("on");document.body.style.overflow="hidden";
+ swap('<h2>Welcome back</h2><p class="s">Log in to see your profile and application status.</p><div class="fld"><label for="l_e">Email</label><input id="l_e" type="email" autocomplete="email" value="'+esc(email||"")+'"></div><div class="fld"><label for="l_p">Password</label><input id="l_p" type="password" autocomplete="current-password"></div><div class="err" id="l_err" role="alert"></div><div class="nav2"><button class="btn" onclick="roles()">New here? Sign up</button><button class="btn p" id="l_b" onclick="doLogin()">Log in</button></div>',()=>{const i=$(email?"l_p":"l_e");i&&i.focus();mb.querySelectorAll("input").forEach(x=>x.onkeydown=e=>{if(e.key==="Enter")doLogin()})})}
+async function doLogin(){
+ const e=$("l_e").value.trim(),p=$("l_p").value,b=$("l_b"),er=$("l_err");
+ if(!e||!p){er.textContent="Enter your email and password";return}
+ b.disabled=true;b.textContent="Logging in...";er.textContent="";
+ try{const r=await fetch("/api/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:e,password:p})}),j=await r.json().catch(()=>({}));
+  if(!r.ok)throw j.error||"Could not log in. Try again.";
+  setAuth(j.token,j.profile);
+  swap('<div class="done"><div class="badge"></div><h2>Welcome back, '+esc((j.profile.name||"").split(" ")[0])+'.</h2><p class="s">You are logged in.</p></div>',()=>setTimeout(closeSignup,1400))}
+ catch(x){b.disabled=false;b.textContent="Log in";er.textContent=typeof x==="string"?x:"Could not log in. Try again."}}
+renderAuth();
+(async()=>{const t=LS.get("opo_t");if(!t)return;try{const r=await fetch("/api/me",{headers:{Authorization:"Bearer "+t}});
+ if(r.status===401){LS.del("opo_t");LS.del("opo_me");me=null;renderAuth();toast("Session expired. Please log in.");return}
+ if(r.ok){const j=await r.json();setAuth(null,j.profile)}}catch(e){}})();
+// ---- public creators, requests and chat ----
+let chatT,cur=null,curN=0,curS="",inb=[],pc=0;
+const link=(u,t)=>u?'<a href="'+esc(/^https?:/i.test(u)?u:"https://"+u)+'" target="_blank" rel="noopener noreferrer">'+t+'</a>':"";
+async function chat(body){
+ const r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+(LS.get("opo_t")||"")},body:JSON.stringify(body)});
+ const j=await r.json().catch(()=>({}));
+ if(!r.ok){if(r.status===401){LS.del("opo_t");LS.del("opo_me");me=null;renderAuth()}throw new Error(j.error||"Something went wrong")}
+ return j}
+async function loadCreators(){
+ try{const r=await fetch("/api/creators");if(!r.ok)return;const j=await r.json();
+  if(!j.list||!j.list.length){$("note").textContent="These are sample profiles. Real creators appear here once they are approved.";return}
+  const G=["#6c4bff,#ff9066","#ff9066,#c2397a","#1f8f7a,#7be0a8","#2d3fd1,#6cc4ff","#c2397a,#ffb36b","#0f7ab5,#f6d365","#8b2fc9,#ff7ab6","#d1432d,#ffc371"];
+  creators=j.list.map(p=>{let h=0;for(const ch of p.id)h=(h*31+ch.charCodeAt(0))>>>0;return[p.name||"Creator",p.niche||"Other",p.platform||"Creator",Number(p.rate)||0,G[h%G.length],p.id,p]});
+  cats=["All",...new Set(creators.map(c=>c[1]))];cat="All";favs.clear();$("note").textContent="";chips();render()}catch(e){}}
+function quick(i){
+ const c=creators[i],p=c[5]&&c[6];
+ ov.classList.add("on");document.body.style.overflow="hidden";
+ swap('<div class="roles"><div class="role" style="background:'+bg(c[4])+';min-height:260px;cursor:default"><i class="orb"></i><b>'+esc(c[0])+'</b><span>'+esc(c[1])+' · '+esc(c[2])+'</span></div><div><h2>From $'+c[3]+'</h2>'+
+ (p?'<p class="s">'+esc(p.bio||"")+'</p><p class="s">'+(p.followers?esc(Number(p.followers).toLocaleString())+' followers · ':"")+link(p.handle,"Profile")+(p.port?" · "+link(p.port,"Best work"):"")+'</p><button class="btn p" onclick="reqForm('+i+')">Send request</button> ':'<p class="s">Sample profile for the demo. Real creators appear here once they are approved.</p><button class="btn p" onclick="openSignup()">Join to hire creators</button> ')+
+ '<button class="btn" onclick="fav('+i+')">'+(favs.has(i)?"Saved ♥":"Save ♡")+'</button></div></div>')}
+function reqForm(i){
+ const c=creators[i];
+ if(!me||!LS.get("opo_t")){toast("Log in as a client to send a request");loginForm();return}
+ if(me.role!=="client"){toast("Only clients can send requests");return}
+ swap('<h2>Request '+esc(c[0])+'</h2><p class="s">Describe your project, budget and timeline. '+esc(c[0].split(" ")[0])+' can accept to start a chat.</p><div class="fld"><label for="r_t">Your message</label><textarea id="r_t" maxlength="1000" rows="5"></textarea><div class="err" id="r_err" role="alert"></div></div><div class="nav2"><button class="btn" onclick="quick('+i+')">Back</button><button class="btn p" id="r_b" onclick="sendReq('+i+')">Send request</button></div>',()=>$("r_t").focus())}
+async function sendReq(i){
+ const c=creators[i],t=$("r_t").value.trim(),b=$("r_b"),er=$("r_err");
+ if(t.length<10){er.textContent="Write a short message (10+ characters)";return}
+ b.disabled=true;b.textContent="Sending...";er.textContent="";
+ try{const j=await chat({action:"request",creatorId:c[5],text:t});
+  swap('<div class="done"><div class="badge"></div><h2>Request sent to '+esc(c[0].split(" ")[0])+'.</h2><p class="s">'+(j.existing?"You already have a conversation with this creator.":"You can chat as soon as they accept.")+'</p><button class="btn p" onclick="openInbox(\''+j.convo+'\')">Open messages</button></div>')}
+ catch(x){b.disabled=false;b.textContent="Send request";er.textContent=x.message}}
+async function openInbox(sel){
+ ov.classList.add("on");document.body.style.overflow="hidden";
+ swap('<h2>Messages</h2><div class="inb"><div class="cl" id="cl"></div><div class="th" id="th"><p class="s" style="margin:20px 8px">Select a conversation.</p></div></div>',async()=>{await loadInbox(sel);clearInterval(chatT);chatT=setInterval(poll,4000)})}
+async function loadInbox(sel){
+ if(!$("cl"))return;
+ try{inb=(await chat({action:"inbox"})).list}catch(e){$("cl").innerHTML='<p class="s">'+esc(e.message)+'</p>';return}
+ $("cl").innerHTML=inb.length?inb.map(c=>'<button class="ci'+(c.id===cur?" on":"")+'" onclick="openThread(\''+c.id+'\')"><b>'+esc(c.other)+'</b><small>'+(c.status==="pending"?(c.mine?"Request sent":"New request"):c.status==="declined"?"Declined":esc(c.last||"Accepted"))+'</small></button>').join(""):'<p class="s">No messages yet. Clients can send a request from a creator profile.</p>';
+ if(sel)openThread(sel)}
+async function openThread(id){
+ cur=id;
+ document.querySelectorAll(".ci").forEach(b=>b.classList.toggle("on",b.getAttribute("onclick").includes(id)));
+ try{drawThread(await chat({action:"open",convo:id,after:0}))}catch(e){toast(e.message)}}
+function drawThread(j){
+ const c=j.convo,th=$("th");if(!th)return;curS=c.status;
+ let ctl;
+ if(c.status==="pending")ctl=c.mine?'<p class="s">Waiting for '+esc(c.other)+' to accept your request.</p>':'<div class="nav2"><button class="btn" onclick="decide(\'decline\')">Decline</button><button class="btn p" onclick="decide(\'accept\')">Accept and chat</button></div>';
+ else if(c.status==="declined")ctl='<p class="s">This request was declined.</p>';
+ else ctl='<div class="snd"><input id="m_t" maxlength="1000" placeholder="Write a message" aria-label="Message"><button class="btn p" onclick="sendMsg()">Send</button></div>';
+ th.innerHTML='<b style="font:800 18px var(--d);margin-bottom:8px">'+esc(c.other)+'</b><div class="msgs" id="msgs"></div>'+ctl;
+ curN=0;addMsgs(j.msgs,true);
+ const m=$("m_t");if(m)m.onkeydown=e=>{if(e.key==="Enter")sendMsg()}}
+function addMsgs(ms,reset){
+ const box=$("msgs");if(!box)return;if(reset)box.innerHTML="";
+ const end=reset||box.scrollHeight-box.scrollTop-box.clientHeight<60;
+ ms.forEach(m=>{const d=document.createElement("div");d.className="bub"+(m.mine?" me":"");d.textContent=m.text;const t=document.createElement("time");t.textContent=new Date(m.t).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});d.appendChild(t);box.appendChild(d)});
+ curN+=ms.length;if(end)box.scrollTop=box.scrollHeight}
+async function poll(){
+ if(!cur||document.hidden||!$("th"))return;
+ if(++pc%3===0)loadInbox();
+ try{const j=await chat({action:"open",convo:cur,after:curN});
+  if(j.convo.status!==curS)drawThread(await chat({action:"open",convo:cur,after:0}));
+  else if(j.msgs.length)addMsgs(j.msgs)}catch(e){}}
+async function decide(a){try{await chat({action:a,convo:cur});await openThread(cur);loadInbox();refreshBadge()}catch(e){toast(e.message)}}
+async function sendMsg(){
+ const m=$("m_t");if(!m)return;const t=m.value.trim();if(!t)return;m.value="";
+ try{const j=await chat({action:"send",convo:cur,text:t,after:curN});addMsgs(j.msgs)}catch(e){m.value=t;toast(e.message)}}
+async function refreshBadge(){
+ if(!me||!LS.get("opo_t")||me.status!=="approved")return;
+ try{const l=(await chat({action:"inbox"})).list,n=l.filter(c=>c.status==="pending"&&!c.mine).length;
+  const b=$("mbadge");if(b)b.textContent=n?" ("+n+")":"";
+  const x=document.querySelector(".pc");if(x)x.classList.toggle("dot",n>0)}catch(e){}}
+setInterval(()=>{if(!document.hidden)refreshBadge()},60000);
+loadCreators();
 chips();render();
 </script>
 </body>
