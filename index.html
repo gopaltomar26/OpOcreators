@@ -66,6 +66,36 @@ color:#fff;box-shadow:0 18px 30px rgba(30,20,90,.25);transform-origin:center;wil
 .cta h2{font:800 clamp(32px,5vw,64px)/1 var(--d);margin:0 auto 22px;max-width:16ch}
 .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,120px);background:var(--ink);color:#fff;border-radius:99px;padding:12px 22px;transition:transform .3s;z-index:30}
 .toast.on{transform:translate(-50%,0)}
+.ov{position:fixed;inset:0;z-index:40;display:none;place-items:center;background:rgba(10,7,30,.82);backdrop-filter:blur(8px);perspective:1600px;padding:16px}
+.ov.on{display:grid}
+.modal{position:relative;width:min(760px,100%);max-height:90vh;overflow:auto;background:linear-gradient(160deg,#241d57,#150f36);border:1px solid #4a3fa0;border-radius:24px;padding:28px;animation:rise .5s cubic-bezier(.2,.8,.2,1)}
+@keyframes rise{from{transform:rotateX(35deg) translateY(60px) scale(.9);opacity:0}}
+.x{position:absolute;top:14px;right:16px;background:none;border:0;color:var(--mute);font-size:28px;cursor:pointer;z-index:2}
+.modal h2{font:800 28px var(--d);margin:0 0 4px}
+.modal p.s{color:var(--mute);margin:0 0 20px}
+.roles{display:grid;grid-template-columns:1fr 1fr;gap:18px;perspective:1000px}
+.role{position:relative;border:0;border-radius:20px;padding:26px 20px;min-height:220px;text-align:left;color:#fff;cursor:pointer;transform-style:preserve-3d;transition:transform .15s;box-shadow:0 20px 40px rgba(0,0,0,.4);display:flex;flex-direction:column;justify-content:flex-end;font:400 14px var(--b)}
+.role b{font:800 24px var(--d);transform:translateZ(40px);display:block}
+.role span{transform:translateZ(24px);display:block;opacity:.9}
+.role .orb{position:absolute;top:22px;right:22px;width:56px;height:56px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff,rgba(255,255,255,.1) 60%);transform:translateZ(60px);animation:bob 3s ease-in-out infinite}
+@keyframes bob{50%{transform:translateZ(60px) translateY(-8px)}}
+.panel{transform-origin:left center}
+.panel.in{animation:flipIn .45s ease both}
+.panel.out{animation:flipOut .25s ease both}
+@keyframes flipIn{from{transform:rotateY(-70deg);opacity:0}}
+@keyframes flipOut{to{transform:rotateY(70deg);opacity:0}}
+.fld{margin-bottom:12px}.fld label{display:block;font-size:13px;color:var(--mute);margin-bottom:5px}
+.fld input,.fld select{width:100%;padding:12px 14px;border-radius:12px;border:1.5px solid #4a3fa0;background:#120e2b;color:var(--ice);font:400 15px var(--b)}
+.fld .bad{border-color:#ff6b6b}
+.err{color:#ff8a8a;font-size:12px;min-height:1.2em;margin-top:3px}
+.bar{display:flex;gap:8px;margin-bottom:18px}.bar i{flex:1;height:6px;border-radius:9px;background:#3a3080}.bar i.d{background:var(--peach)}
+.nav2{display:flex;justify-content:space-between;margin-top:8px}
+.done{text-align:center;padding:10px 0}
+.badge{width:110px;height:110px;margin:6px auto 18px;border-radius:50%;background:conic-gradient(var(--violet),var(--peach),var(--violet));animation:spin 4s linear infinite;display:grid;place-items:center}
+.badge::after{content:"✓";font:800 46px var(--d);color:#fff}
+@keyframes spin{to{transform:rotateY(360deg)}}
+@media(max-width:560px){.roles{grid-template-columns:1fr}.role{min-height:150px}}
+@media(prefers-reduced-motion:reduce){.modal,.panel,.badge,.role .orb{animation:none}}
 @media(max-width:760px){nav .l{display:none}.build .stage{grid-template-columns:1fr;grid-template-rows:auto 1fr;padding-top:70px}.stack{height:44vh}.steps h2{max-width:none}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.ring{transition:none}}
 </style>
@@ -74,7 +104,7 @@ color:#fff;box-shadow:0 18px 30px rgba(30,20,90,.25);transform-origin:center;wil
 <nav>
  <a class="logo" href="#top">Op<i>O</i>creators</a>
  <div class="l"><a href="#how">How it works</a><a href="#browse">Browse creators</a><a href="#join">For creators</a></div>
- <a class="btn" href="#browse">Find creators</a>
+ <div style="display:flex;gap:10px"><a class="btn" href="#browse">Find creators</a><button class="btn p" onclick="openSignup()">Sign up</button></div>
 </nav>
 
 <header class="hero" id="top">
@@ -111,8 +141,9 @@ color:#fff;box-shadow:0 18px 30px rgba(30,20,90,.25);transform-origin:center;wil
 
 <section class="cta" id="join">
  <h2>Get paid for the content you already make.</h2>
- <a class="btn" href="#" onclick="toast('Creator sign-up opens soon');return false">Join as a creator</a>
+ <a class="btn" href="#" onclick="openSignup('creator');return false">Join as a creator</a>
 </section>
+<div class="ov" id="ov" onclick="if(event.target===this)closeSignup()"><div class="modal" role="dialog" aria-modal="true" aria-label="Sign up"><button class="x" onclick="closeSignup()" aria-label="Close">×</button><div id="mbody"></div></div></div>
 <div class="toast" id="toast" role="status"></div>
 
 <script>
@@ -174,6 +205,43 @@ function render(){
 function chips(){$("chips").innerHTML=cats.map(c=>`<button class="chip" aria-pressed="${c===cat}" onclick="cat='${c}';chips();render()">${c}</button>`).join("")}
 function go(t){term=t.trim();cat="All";chips();render();document.getElementById("browse").scrollIntoView()}
 let tt;function toast(m){const t=$("toast");t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),2200)}
+// ---- 3D sign-up flow ----
+const S="select",flows={
+client:[
+{t:"About you",s:"Tell us who we're talking to.",f:[["name","Full name","text"],["email","Work email","email"],["phone","Phone number","tel"]]},
+{t:"Your business",s:"We check this so creators only work with real brands.",f:[["biz","Business or brand name","text"],["web","Website or Instagram link","url"],["type","Business type",S,["D2C brand","Agency","Startup","Restaurant or local shop","Other"]]]},
+{t:"Your campaigns",s:"What you plan to book.",f:[["budget","Monthly budget",S,["Under $500","$500 – $2,000","$2,000 – $10,000","$10,000+"]],["need","Content you need",S,["UGC videos","Reels","Product photos","Ads"]],["reg","Business registration or GST number (optional, speeds up approval)","text",0,1]]}],
+creator:[
+{t:"About you",s:"Tell us who we're talking to.",f:[["name","Full name","text"],["email","Email","email"],["city","City","text"]]},
+{t:"Your channel",s:"We check your profile to confirm it's really yours.",f:[["platform","Main platform",S,["Instagram","TikTok","YouTube","Other"]],["handle","Profile link","url"],["followers","Followers","number"]]},
+{t:"Your work",s:"Show us what brands would get.",f:[["niche","Niche",S,["Beauty","Fitness","Food","Tech","Fashion","Travel","Other"]],["port","Link to your best work","url"],["rate","Starting price per video (USD)","number"]]}]};
+let role,step,data={};
+const ov=$("ov"),mb=$("mbody"),esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function openSignup(r){ov.classList.add("on");document.body.style.overflow="hidden";data={};mb.innerHTML="";r?pick(r):roles()}
+function closeSignup(){ov.classList.remove("on");document.body.style.overflow=""}
+addEventListener("keydown",e=>{if(e.key==="Escape")closeSignup()});
+function swap(html,after){const p=mb.firstElementChild,show=()=>{mb.innerHTML='<div class="panel in">'+html+'</div>';after&&after()};if(p){p.className="panel out";setTimeout(show,230)}else show()}
+function roles(){swap('<h2>Join OpOcreators</h2><p class="s">How will you use it?</p><div class="roles"><button class="role" style="background:linear-gradient(155deg,#6c4bff,#2d3fd1)" onclick="pick(\'client\')"><i class="orb"></i><b>I\'m a client</b><span>Book creators for my brand.</span></button><button class="role" style="background:linear-gradient(155deg,#ff9066,#c2397a)" onclick="pick(\'creator\')"><i class="orb"></i><b>I\'m a creator</b><span>Get hired and get paid.</span></button></div>',()=>{document.querySelectorAll(".role").forEach(b=>{b.onpointermove=e=>{const r=b.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;b.style.transform='rotateY('+x*18+'deg) rotateX('+-y*18+'deg)'};b.onpointerleave=()=>b.style.transform=""})})}
+function pick(r){role=r;step=0;form()}
+function form(){const fl=flows[role],s=fl[step];
+const bar=fl.map((_,i)=>'<i class="'+(i<=step?"d":"")+'"></i>').join("");
+const fs=s.f.map(f=>{const v=esc(data[f[0]]||""),id='f_'+f[0];
+const inp=f[2]===S?'<select id="'+id+'"><option value="">Choose one</option>'+f[3].map(o=>'<option'+(o===data[f[0]]?" selected":"")+'>'+o+'</option>').join("")+'</select>':'<input id="'+id+'" type="'+f[2]+'" value="'+v+'"'+(f[2]==="number"?' min="0"':"")+'>';
+return '<div class="fld"><label for="'+id+'">'+f[1]+'</label>'+inp+'<div class="err" id="e_'+f[0]+'"></div></div>'}).join("");
+swap('<div class="bar">'+bar+'</div><h2>'+s.t+'</h2><p class="s">'+s.s+'</p>'+fs+'<div class="nav2"><button class="btn" onclick="back()">Back</button><button class="btn p" onclick="next()">'+(step===fl.length-1?"Submit application":"Continue")+'</button></div>',()=>{const i=mb.querySelector("input,select");i&&i.focus()})}
+function collect(){flows[role][step].f.forEach(f=>{const e=$("f_"+f[0]);if(e)data[f[0]]=e.value.trim()})}
+const chk={email:v=>/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)||"Enter a valid email address",tel:v=>v.replace(/\D/g,"").length>=8||"Enter a valid phone number",url:v=>/^(https?:\/\/)?[\w-]+(\.[\w-]+)+/i.test(v)||"Enter a link, like instagram.com/yourname",number:v=>Number(v)>=0||"Enter a number"};
+function next(){collect();let ok=true;
+flows[role][step].f.forEach(f=>{const v=data[f[0]]||"",el=$("f_"+f[0]);let m="";
+if(!v){if(!f[4])m=f[2]===S?"Choose one":"This field is required"}else if(chk[f[2]]){const r=chk[f[2]](v);if(r!==true)m=r}
+$("e_"+f[0]).textContent=m;el.classList.toggle("bad",!!m);if(m)ok=false});
+if(!ok)return;
+if(step<flows[role].length-1){step++;form()}else submit()}
+function back(){collect();if(step===0)roles();else{step--;form()}}
+function submit(){
+// TODO: send `data` and `role` to your backend here
+const c=role==="client";
+swap('<div class="done"><div class="badge"></div><h2>Thanks, '+esc(data.name.split(" ")[0])+'. Your application is in.</h2><p class="s">'+(c?"We'll review "+esc(data.biz)+"'s website and email, then confirm your account within 1–2 days.":"We'll check your profile and portfolio, then confirm your creator account within 1–2 days.")+'</p><button class="btn p" onclick="closeSignup()">Back to site</button></div>')}
 chips();render();
 </script>
 </body>
