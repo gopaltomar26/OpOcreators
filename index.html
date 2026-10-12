@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OpOcreators – Hire creators for UGC, reels and ads</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--ink:#120e2b;--ink2:#1c1740;--violet:#6c4bff;--peach:#ff9066;--ice:#efeaff;--mute:#a9a2cf;
+--d:'Bricolage Grotesque','Trebuchet MS',sans-serif;--b:'DM Sans',system-ui,sans-serif}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{margin:0;background:var(--ink);color:var(--ice);font:400 16px/1.55 var(--b)}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--peach);outline-offset:3px}
+nav{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:14px 5vw;background:linear-gradient(var(--ink),transparent)}
+.logo{font:800 22px var(--d)}.logo i{color:var(--peach);font-style:normal}
+nav .l{display:flex;gap:26px;font-size:14px;color:var(--mute)}
+.btn{display:inline-block;border:0;border-radius:99px;padding:11px 22px;background:var(--ice);color:var(--ink);font:500 14px var(--b);cursor:pointer}
+.btn.p{background:var(--violet);color:#fff}
+/* hero */
+.hero{height:320vh;position:relative}
+.stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;display:grid;place-items:center;
+background:radial-gradient(60% 55% at 50% 58%,#3a2a9a 0%,var(--ink) 70%)}
+.bigword{position:absolute;inset:auto 0 12vh;text-align:center;font:800 clamp(90px,24vw,330px)/.8 var(--d);color:rgba(255,255,255,.06);white-space:nowrap;pointer-events:none}
+.ring-wrap{perspective:1400px;position:absolute;top:19vh;left:0;right:0;height:46vh;display:grid;place-items:center}
+.ring{position:relative;width:170px;height:46vh;transform-style:preserve-3d;transition:transform .15s linear}
+.card3{position:absolute;inset:0;border-radius:18px;backface-visibility:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:14px;font-size:13px;
+box-shadow:0 20px 50px rgba(0,0,0,.45);overflow:hidden}
+.card3 b{font:800 20px var(--d);line-height:1.1}
+.card3 span{opacity:.85}
+.card3 .tag{position:absolute;top:12px;left:12px;background:rgba(0,0,0,.35);border-radius:99px;padding:3px 10px;font-size:12px}
+.copy{position:absolute;left:0;right:0;bottom:6vh;text-align:center;padding:0 6vw;transition:opacity .3s}
+h1{font:800 clamp(34px,6vw,76px)/1 var(--d);margin:0 auto 14px;max-width:14ch;letter-spacing:-.02em}
+.copy p{margin:0 auto 20px;color:var(--mute);max-width:46ch}
+.search{display:flex;gap:6px;background:#fff;border-radius:99px;padding:6px;max-width:520px;margin:0 auto}
+.search input{flex:1;border:0;background:none;padding:0 16px;font:400 15px var(--b);color:var(--ink);min-width:0}
+.search input:focus{outline:none}
+/* exploded campaign */
+.build{height:360vh;position:relative;background:linear-gradient(var(--ink),#efeaff 14%,#efeaff 100%);color:var(--ink)}
+.build .stage{background:none;grid-template-columns:1fr 1fr;padding:0 6vw;gap:4vw;place-items:center}
+.stack{position:relative;width:min(340px,70vw);height:60vh;perspective:1100px}
+.layer{position:absolute;left:0;right:0;top:50%;height:96px;margin-top:-48px;border-radius:16px;padding:16px 20px;display:flex;flex-direction:column;justify-content:center;
+color:#fff;box-shadow:0 18px 30px rgba(30,20,90,.25);transform-origin:center;will-change:transform}
+.layer b{font:800 20px var(--d)}.layer span{font-size:13px;opacity:.9}
+.steps h2{font:800 clamp(30px,4.4vw,56px)/1.02 var(--d);margin:0 0 12px;letter-spacing:-.02em;max-width:12ch}
+.steps p{max-width:36ch;margin:0 0 8px;color:#4b4477}
+.steps .now{font:800 24px var(--d);color:var(--violet);min-height:2.4em;margin-top:18px}
+/* marketplace */
+.mkt{background:var(--ice);color:var(--ink);padding:70px 5vw 90px}
+.mkt h2{font:800 clamp(30px,4vw,52px)/1 var(--d);margin:0 0 22px;letter-spacing:-.02em}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px}
+.chip{border:1.5px solid #cfc7f5;background:none;color:var(--ink);border-radius:99px;padding:8px 16px;font:500 14px var(--b);cursor:pointer}
+.chip[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:22px}
+.cr{background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 8px 24px rgba(40,25,120,.1);cursor:pointer;transition:transform .2s}
+.cr:hover{transform:translateY(-4px)}
+.cr .pic{height:240px;display:grid;place-items:center;font:800 64px var(--d);color:rgba(255,255,255,.9)}
+.cr .in{padding:14px 16px 16px}
+.cr h3{margin:0;font:800 18px var(--d)}
+.cr small{color:#6b6496}
+.cr .row{display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-size:14px}
+.empty{padding:40px;text-align:center;color:#6b6496}
+.cta{text-align:center;padding:90px 6vw;background:var(--violet)}
+.cta h2{font:800 clamp(32px,5vw,64px)/1 var(--d);margin:0 auto 22px;max-width:16ch}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,120px);background:var(--ink);color:#fff;border-radius:99px;padding:12px 22px;transition:transform .3s;z-index:30}
+.toast.on{transform:translate(-50%,0)}
+@media(max-width:760px){nav .l{display:none}.build .stage{grid-template-columns:1fr;grid-template-rows:auto 1fr;padding-top:70px}.stack{height:44vh}.steps h2{max-width:none}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.ring{transition:none}}
+</style>
+</head>
+<body>
+<nav>
+ <a class="logo" href="#top">Op<i>O</i>creators</a>
+ <div class="l"><a href="#how">How it works</a><a href="#browse">Browse creators</a><a href="#join">For creators</a></div>
+ <a class="btn" href="#browse">Find creators</a>
+</nav>
+
+<header class="hero" id="top">
+ <div class="stage">
+  <div class="bigword" aria-hidden="true">CREATORS</div>
+  <div class="ring-wrap"><div class="ring" id="ring"></div></div>
+  <div class="copy">
+   <h1>Hire creators who make your brand move.</h1>
+   <p>Book UGC, reels and ads from 12,000+ vetted creators. Fixed prices, no pitching back and forth.</p>
+   <form class="search" onsubmit="event.preventDefault();go(document.getElementById('q').value)">
+    <input id="q" placeholder="Try “skincare reels” or “fitness”" aria-label="Search creators">
+    <button class="btn p">Search</button>
+   </form>
+  </div>
+ </div>
+</header>
+
+<section class="build" id="how">
+ <div class="stage">
+  <div class="stack" id="stack" aria-hidden="true"></div>
+  <div class="steps">
+   <h2>A campaign, built in four layers.</h2>
+   <p>Keep scrolling and watch the stack come apart: every booking on OpOcreators moves through the same four parts.</p>
+   <div class="now" id="now">Brief</div>
+  </div>
+ </div>
+</section>
+
+<section class="mkt" id="browse">
+ <h2>Browse creators</h2>
+ <div class="chips" id="chips" role="group" aria-label="Filter by category"></div>
+ <div class="grid" id="grid"></div>
+</section>
+
+<section class="cta" id="join">
+ <h2>Get paid for the content you already make.</h2>
+ <a class="btn" href="#" onclick="toast('Creator sign-up opens soon');return false">Join as a creator</a>
+</section>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const creators=[
+["Maya Rao","Beauty","UGC video",85,"#6c4bff,#ff9066"],
+["Leo Hart","Fitness","Reels",120,"#ff9066,#c2397a"],
+["Sana Iqbal","Food","TikTok",95,"#1f8f7a,#7be0a8"],
+["Dev Mehta","Tech","YouTube review",250,"#2d3fd1,#6cc4ff"],
+["Aria Cole","Fashion","Photo + Reels",140,"#c2397a,#ffb36b"],
+["Kabir Shah","Travel","Vlog",180,"#0f7ab5,#f6d365"],
+["Nina Park","Beauty","UGC video",75,"#8b2fc9,#ff7ab6"],
+["Omar Reyes","Fitness","TikTok",110,"#d1432d,#ffc371"],
+["Tia Brooks","Food","Reels",90,"#3b7a2a,#d7e86b"],
+["Zoe Lin","Tech","UGC video",130,"#3d2fd1,#b66cff"],
+["Ravi Nair","Fashion","Photo",100,"#222a5e,#ff9066"],
+["Ella Moss","Travel","Reels",160,"#16897a,#6c4bff"]];
+const cats=["All",...new Set(creators.map(c=>c[1]))];
+let cat="All",term="";
+const $=id=>document.getElementById(id);
+const bg=g=>`linear-gradient(155deg,${g.split(",")[0]},${g.split(",")[1]})`;
+
+// hero ring
+const ring=$("ring"),N=8;
+creators.slice(0,N).forEach((c,i)=>{
+ const d=document.createElement("div");d.className="card3";d.style.background=bg(c[4]);
+ d.style.transform=`rotateY(${i*360/N}deg) translateZ(300px)`;
+ d.innerHTML=`<div class="tag">${c[1]}</div><b>${c[0]}</b><span>${c[2]} · from $${c[3]}</span>`;
+ ring.appendChild(d)});
+
+// exploded layers
+const L=[["Brief","Describe the content you need","#6c4bff"],["Creator","Pick from vetted profiles","#8a5cff"],["Content","Receive and approve the video","#e0709a"],["Payout","Pay only when you approve","#ff9066"]];
+const stack=$("stack");
+L.forEach(l=>{const e=document.createElement("div");e.className="layer";e.style.background=l[2];e.innerHTML=`<b>${l[0]}</b><span>${l[1]}</span>`;stack.appendChild(e)});
+const layers=[...stack.children];
+
+function clamp(v){return Math.max(0,Math.min(1,v))}
+function prog(el){const r=el.getBoundingClientRect();return clamp(-r.top/(r.height-innerHeight))}
+function tick(){
+ const h=prog(document.querySelector(".hero"));
+ ring.style.transform=`rotateX(-6deg) rotateY(${-h*300}deg) scale(${1+h*.1})`;
+ const b=prog(document.querySelector(".build"));
+ const ex=clamp(b*1.6);
+ layers.forEach((e,i)=>{
+  const y=(i-1.5)*(24+ex*110);
+  e.style.transform=`translateY(${y}px) rotateX(${58-ex*20}deg) rotateZ(${-8*(1-ex)}deg) scale(${1-.04*(3-i)*(1-ex)})`});
+ $("now").textContent=L[Math.min(3,Math.floor(b*4))][0]+" · "+L[Math.min(3,Math.floor(b*4))][1];
+}
+addEventListener("scroll",tick,{passive:true});addEventListener("resize",tick);tick();
+
+// marketplace
+function render(){
+ const q=term.toLowerCase();
+ const list=creators.filter(c=>(cat==="All"||c[1]===cat)&&(!q||c.slice(0,3).join(" ").toLowerCase().includes(q)));
+ $("grid").innerHTML=list.length?list.map(c=>`<article class="cr" tabindex="0" onclick="toast('Opening ${c[0]}’s profile soon')">
+  <div class="pic" style="background:${bg(c[4])}">${c[0].split(" ").map(w=>w[0]).join("")}</div>
+  <div class="in"><h3>${c[0]}</h3><small>${c[1]} · ${c[2]}</small>
+  <div class="row"><span>From <b>$${c[3]}</b></span><span class="btn p" style="padding:7px 14px">Book</span></div></div></article>`).join(""):`<div class="empty">No creators match “${term}”. Try another category.</div>`;
+}
+function chips(){$("chips").innerHTML=cats.map(c=>`<button class="chip" aria-pressed="${c===cat}" onclick="cat='${c}';chips();render()">${c}</button>`).join("")}
+function go(t){term=t.trim();cat="All";chips();render();document.getElementById("browse").scrollIntoView()}
+let tt;function toast(m){const t=$("toast");t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),2200)}
+chips();render();
+</script>
+</body>
+</html>
