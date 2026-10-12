@@ -322,8 +322,10 @@ $("e_"+f[0]).textContent=m;el.classList.toggle("bad",!!m);if(m)ok=false});
 if(!ok)return;
 if(step<flows[role].length-1){step++;form()}else submit()}
 function back(){collect();if(step===0)roles();else{step--;form()}}
-function submit(){
-// TODO: send `data` and `role` to your backend here
+async function submit(){
+const btn=mb.querySelector(".btn.p");if(btn){btn.disabled=true;btn.textContent="Sending..."}
+try{const r=await fetch("/api/signup",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({role,data})});if(!r.ok)throw 0}
+catch(e){if(btn){btn.disabled=false;btn.textContent="Submit application"}toast("Could not send. Please try again.");return}
 const c=role==="client";
 swap('<div class="done"><div class="badge"></div><h2>Thanks, '+esc(data.name.split(" ")[0])+'. Your application is in.</h2><p class="s">'+(c?"We'll review "+esc(data.biz)+"'s website and email, then confirm your account within 1–2 days.":"We'll check your profile and portfolio, then confirm your creator account within 1–2 days.")+'</p><button class="btn p" onclick="closeSignup()">Back to site</button></div>')}
 // ---- polish and extra features ----

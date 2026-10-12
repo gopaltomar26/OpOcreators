@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>OpOcreators Master Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--ink:#05060f;--pan:#0d0b26;--line:#2a2560;--violet:#7c5cff;--cy:#22d3ee;--peach:#ff9066;--ice:#eceaff;--mute:#9a97c4;--d:'Bricolage Grotesque','Trebuchet MS',sans-serif;--b:'DM Sans',system-ui,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(60% 40% at 50% 0%,#2b1d86,var(--ink) 70%) fixed;color:var(--ice);font:400 15px/1.5 var(--b)}
+:focus-visible{outline:2px solid var(--peach);outline-offset:2px}
+button{font:500 14px var(--b);cursor:pointer}
+input,select{width:100%;padding:12px 14px;border-radius:12px;border:1.5px solid var(--line);background:#0b0920;color:var(--ice);font:400 15px var(--b)}
+.b{border:1px solid var(--line);background:var(--pan);color:var(--ice);border-radius:99px;padding:9px 16px}
+.b:hover{border-color:var(--cy)}
+.b.p{border:0;background:linear-gradient(90deg,var(--violet),#5b8cff)}
+.b.g{color:#34d399;border-color:#34d399}.b.r{color:#f87171;border-color:#f87171}
+[hidden]{display:none!important}
+#login{min-height:100vh;display:grid;place-items:center;padding:20px;perspective:1200px}
+.lb{width:min(380px,100%);padding:30px;border-radius:24px;background:linear-gradient(160deg,#241d57,#150f36);border:1px solid var(--line);box-shadow:0 0 60px rgba(124,92,255,.3);animation:rise .6s cubic-bezier(.2,.8,.2,1)}
+@keyframes rise{from{transform:rotateX(35deg) translateY(50px);opacity:0}}
+.lb h1{font:800 30px var(--d);margin:0 0 6px}.lb p{color:var(--mute);margin:0 0 18px}
+.err{color:#ff8a8a;font-size:13px;min-height:1.4em;margin-top:6px}
+.wrap{max-width:1100px;margin:0 auto;padding:24px 5vw 70px}
+header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:22px}
+.logo{font:800 24px var(--d)}.logo i{color:var(--peach);font-style:normal}.logo small{display:block;font:400 13px var(--b);color:var(--mute)}
+.hb{display:flex;gap:8px;flex-wrap:wrap}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:22px}
+.sc{padding:18px;border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09)}
+.sc b{display:block;font:800 36px/1 var(--d);background:linear-gradient(90deg,#fff,var(--cy));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sc span{color:var(--mute);font-size:13px}
+.bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;align-items:center}
+.tabs{display:flex;gap:6px}
+.tabs button{border:1px solid var(--line);background:none;color:var(--ice);border-radius:99px;padding:8px 16px}
+.tabs button[aria-pressed=true]{background:linear-gradient(90deg,var(--violet),var(--cy));border-color:transparent;color:#05060f}
+.bar select{width:auto}.bar input{flex:1;min-width:180px}
+.it{border-radius:18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);margin-bottom:10px;overflow:hidden}
+.hd{width:100%;display:grid;grid-template-columns:44px 1fr auto auto auto;gap:12px;align-items:center;padding:14px 16px;background:none;border:0;color:inherit;text-align:left}
+.hd:hover{background:rgba(124,92,255,.08)}
+.av{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font:800 16px var(--d)}
+.av.client{background:linear-gradient(135deg,var(--violet),#2d3fd1)}.av.creator{background:linear-gradient(135deg,var(--peach),#c2397a)}
+.who b{display:block}.who small,time{color:var(--mute);font-size:13px}
+.tag,.st{border-radius:99px;padding:3px 11px;font-size:12px;border:1px solid var(--line)}
+.st.pending{color:var(--peach);border-color:var(--peach)}.st.approved{color:#34d399;border-color:#34d399}.st.rejected{color:#f87171;border-color:#f87171}
+.bd{padding:6px 16px 16px;border-top:1px solid #1f1b4d;transform-origin:top;animation:fl .35s ease}
+@keyframes fl{from{transform:perspective(800px) rotateX(-25deg);opacity:0}}
+.kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin:14px 0}
+.kv small{display:block;color:var(--mute);font-size:12px}.kv span{word-break:break-word}.kv a{color:var(--cy)}
+.ac{display:flex;gap:8px;flex-wrap:wrap}
+.empty{padding:50px 20px;text-align:center;color:var(--mute)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,120px);background:#241d57;color:#fff;border-radius:99px;padding:12px 22px;transition:transform .3s;z-index:9}
+.toast.on{transform:translate(-50%,0)}
+@media(max-width:640px){.hd{grid-template-columns:44px 1fr auto}.hd time,.hd .tag{display:none}}
+@media(prefers-reduced-motion:reduce){.lb,.bd{animation:none}}
+</style>
+</head>
+<body>
+<div id="login"><form class="lb" onsubmit="event.preventDefault();signin()">
+<h1>Master panel</h1><p>Enter the admin password to see sign-ups.</p>
+<input id="pw" type="password" placeholder="Admin password" autocomplete="current-password" aria-label="Admin password">
+<div id="lerr" class="err" role="alert"></div>
+<button class="b p" style="width:100%;margin-top:6px">Unlock panel</button></form></div>
+
+<div id="app" hidden><div class="wrap">
+<header><div class="logo">Op<i>O</i>creators<small>Master panel</small></div>
+<div class="hb"><button class="b" onclick="load()">Refresh</button><button class="b" onclick="csv()">Export CSV</button><button class="b" onclick="out()">Log out</button></div></header>
+<div class="stats" id="stats"></div>
+<div class="bar">
+<div class="tabs" role="group" aria-label="Filter by type"><button data-t="all" onclick="tab='all';draw()">All</button><button data-t="client" onclick="tab='client';draw()">Clients</button><button data-t="creator" onclick="tab='creator';draw()">Creators</button></div>
+<select aria-label="Filter by status" onchange="st=this.value;draw()"><option value="all">Any status</option><option value="pending">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option></select>
+<input type="search" placeholder="Search name, email, business..." aria-label="Search" oninput="q=this.value;draw()">
+</div>
+<div id="list"></div></div></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const $=s=>document.querySelector(s),esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const LBL={name:"Name",email:"Email",phone:"Phone",biz:"Business",web:"Website or Instagram",type:"Business type",budget:"Monthly budget",need:"Content needed",reg:"Registration no.",city:"City",platform:"Platform",handle:"Profile link",followers:"Followers",niche:"Niche",port:"Best work",rate:"Starting price (USD)"};
+const LINKS=["web","handle","port"];
+let key=sessionStorage.getItem("k")||"",all=[],tab="all",st="all",q="",open=new Set();
+
+async function api(m,body){
+ const r=await fetch("/api/admin",{method:m,headers:{"x-admin-key":key,"Content-Type":"application/json"},body:body?JSON.stringify(body):undefined});
+ const j=await r.json().catch(()=>({}));
+ if(!r.ok)throw Object.assign(new Error(j.error||"Something went wrong"),{code:r.status});
+ return j}
+async function load(manual){
+ try{all=(await api("GET")).list;$("#login").hidden=true;$("#app").hidden=false;draw()}
+ catch(e){if(e.code===401){sessionStorage.removeItem("k");key="";$("#app").hidden=true;$("#login").hidden=false;$("#lerr").textContent=manual?"Wrong password. Try again.":""}else toast(e.message)}}
+function signin(){key=$("#pw").value;sessionStorage.setItem("k",key);load(true)}
+function out(){sessionStorage.removeItem("k");key="";all=[];$("#app").hidden=true;$("#login").hidden=false;$("#pw").value=""}
+function fmt(t){return new Date(t).toLocaleString([], {dateStyle:"medium",timeStyle:"short"})}
+function card(r){
+ const d=r.data,ini=(d.name||"?").split(" ").map(w=>w[0]).slice(0,2).join("").toUpperCase();
+ const body=open.has(r.id)?'<div class="bd"><div class="kv">'+Object.keys(d).map(k=>{let v=d[k]||"-";const h=LINKS.includes(k)&&d[k]?(/^https?:/i.test(v)?v:"https://"+v):"";
+  return '<div><small>'+esc(LBL[k]||k)+'</small><span>'+(h?'<a href="'+esc(h)+'" target="_blank" rel="noopener noreferrer">'+esc(v)+'</a>':esc(v))+'</span></div>'}).join("")+'</div><div class="ac">'
+  +(r.status!=="approved"?'<button class="b g" onclick="act(\''+r.id+'\',\'approved\')">Approve</button>':"")
+  +(r.status!=="rejected"?'<button class="b r" onclick="act(\''+r.id+'\',\'rejected\')">Reject</button>':"")
+  +(r.status!=="pending"?'<button class="b" onclick="act(\''+r.id+'\',\'pending\')">Set to pending</button>':"")
+  +'<button class="b" onclick="del(\''+r.id+'\')">Delete</button></div></div>':"";
+ return '<article class="it"><button class="hd" aria-expanded="'+open.has(r.id)+'" onclick="tg(\''+r.id+'\')"><div class="av '+r.role+'">'+esc(ini)+'</div><div class="who"><b>'+esc(d.name)+'</b><small>'+esc(d.email)+'</small></div><span class="tag">'+r.role+'</span><span class="st '+r.status+'">'+r.status+'</span><time>'+fmt(r.createdAt)+'</time></button>'+body+'</article>'}
+function draw(){
+ const n=f=>all.filter(f).length;
+ $("#stats").innerHTML=[["Total sign-ups",all.length],["Clients",n(r=>r.role==="client")],["Creators",n(r=>r.role==="creator")],["Pending review",n(r=>r.status==="pending")],["Approved",n(r=>r.status==="approved")]].map(s=>'<div class="sc"><b>'+s[1]+'</b><span>'+s[0]+'</span></div>').join("");
+ const t=q.toLowerCase(),L=all.filter(r=>(tab==="all"||r.role===tab)&&(st==="all"||r.status===st)&&(!t||JSON.stringify(r.data).toLowerCase().includes(t)));
+ $("#list").innerHTML=L.length?L.map(card).join(""):'<div class="empty">'+(all.length?"No sign-ups match these filters.":"No sign-ups yet. They will appear here as soon as someone applies.")+'</div>';
+ document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.t===tab)))}
+function tg(id){open.has(id)?open.delete(id):open.add(id);draw()}
+async function act(id,a){try{await api("POST",{id,action:a});toast("Marked "+a);await load()}catch(e){toast(e.message)}}
+async function del(id){if(!confirm("Delete this sign-up permanently?"))return;try{await api("POST",{id,action:"delete"});open.delete(id);toast("Deleted");await load()}catch(e){toast(e.message)}}
+function csv(){
+ const keys=[...new Set(all.flatMap(r=>Object.keys(r.data)))],rows=[["role","status","created",...keys]].concat(all.map(r=>[r.role,r.status,r.createdAt,...keys.map(k=>r.data[k]||"")]));
+ const s=rows.map(r=>r.map(v=>{v=String(v);if(/^[=+\-@]/.test(v))v="'"+v;return '"'+v.replace(/"/g,'""')+'"'}).join(",")).join("\n");
+ const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([s],{type:"text/csv"}));a.download="opocreators-signups.csv";a.click()}
+let tt;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),2200)}
+if(key)load();
+setInterval(()=>{if(key&&!document.hidden&&!$("#app").hidden)load()},30000);
+</script>
+</body>
+</html>
