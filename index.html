@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>OpOcreators – Hire creators for UGC, reels and ads</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
@@ -121,7 +122,7 @@ h1{background:linear-gradient(180deg,#fff,#b9adff);-webkit-background-clip:text;
 .fav{position:absolute;top:10px;right:10px;width:38px;height:38px;border-radius:50%;border:0;background:rgba(5,6,15,.5);color:#fff;font-size:18px;cursor:pointer}
 .sort{display:inline-flex;gap:8px;align-items:center;margin:0 0 18px;color:var(--mute);font-size:14px}
 .sort select{background:#0d0b26;color:var(--ice);border:1px solid #2f2a63;border-radius:10px;padding:8px 10px;font:inherit}
-.sec{padding:80px 5vw;background:var(--ink);content-visibility:auto;contain-intrinsic-size:auto 700px}
+.sec{padding:80px 5vw;background:var(--ink)}
 .sec h2{font:800 clamp(30px,4vw,52px)/1 var(--d);margin:0 0 12px;letter-spacing:-.02em}
 .sec>p{color:var(--mute);max-width:52ch;margin:0 0 36px}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:20px;padding:46px 5vw;background:#0b0a22;border-block:1px solid #1f1b4d}
@@ -182,6 +183,80 @@ details{border-bottom:1px solid #1f1b4d;padding:16px 0}summary{cursor:pointer;fo
 .bub time{display:block;font-size:11px;opacity:.7;margin-top:2px}
 .snd{display:flex;gap:8px;margin-top:10px}.snd input{flex:1}
 @media(max-width:560px){.inb{grid-template-columns:1fr}.cl{max-height:150px}}
+/* ---- smooth scrolling and plans ---- */
+html,body{overscroll-behavior-x:none}
+button,a{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.hero{height:auto}.build{height:auto}
+.stage{position:relative}
+.build .stage{height:auto;min-height:100svh;padding:90px 6vw 60px}
+.hero .stage{cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.hero .stage.drg{cursor:grabbing}
+.hero input{user-select:text;-webkit-user-select:text}
+.ring{transition:none;will-change:transform}
+.hint{display:block;margin-top:12px;color:var(--mute);font-size:12px;letter-spacing:.02em}
+.layer{transform:translateY(calc((var(--i) - 1.5) * 24px)) rotateX(58deg) rotateZ(-8deg) scale(calc(1 - .04 * (3 - var(--i))));transition:transform .9s cubic-bezier(.2,.8,.2,1),box-shadow .4s,filter .4s}
+.stack.on .layer{transform:translateY(calc((var(--i) - 1.5) * 134px)) rotateX(38deg) rotateZ(0deg) scale(1)}
+.layer.act{filter:brightness(1.3);box-shadow:0 0 44px rgba(34,211,238,.55),0 18px 30px rgba(0,0,0,.4)}
+.ctl{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:26px}.ctl .tog{margin-bottom:0}
+.pl{display:flex;flex-direction:column}.pl ul{flex:1}
+.pl .sv{color:#34d399;font-size:13px;min-height:1.3em;margin-bottom:8px}
+.pl .btn[disabled]{opacity:.6;cursor:default}
+.pbd{position:absolute;top:10px;left:10px;border-radius:99px;padding:3px 10px;font:500 11px var(--b);background:rgba(5,6,15,.6);color:#fff;text-transform:uppercase;letter-spacing:.04em}
+.pbd.basic{color:var(--cy)}.pbd.premium{color:#c4b5ff}.pbd.advanced{color:#f5c46b}
+.pl .pbd{position:static;display:inline-block;align-self:flex-start;margin-bottom:8px;background:rgba(124,92,255,.35)}
+.cr.top{border-color:#f5c46b;box-shadow:0 0 36px rgba(245,196,107,.3)}
+.pm .tg.plan{text-transform:capitalize;border-color:#f5c46b;color:#f5c46b}
+@media(prefers-reduced-motion:reduce){.layer{transition:none}}
+/* ---- AI assistant ---- */
+.ai-b{display:inline-flex;align-items:center;gap:8px;border:1px solid #4a3fa0;background:linear-gradient(135deg,rgba(124,92,255,.35),rgba(34,211,238,.25));color:var(--ice);border-radius:99px;padding:7px 14px 7px 9px;font:500 14px var(--b);cursor:pointer;box-shadow:0 0 24px rgba(124,92,255,.35)}
+.ai-b i,.orbi{border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff,var(--cy) 45%,var(--violet));animation:orb 3s ease-in-out infinite;flex:none;display:block}
+.ai-b i{width:22px;height:22px}.orbi{width:36px;height:36px}
+@keyframes orb{50%{transform:scale(1.15);box-shadow:0 0 16px var(--cy)}}
+.ai{position:fixed;z-index:35;top:calc(68px + env(safe-area-inset-top,0px));right:max(12px,3vw);width:min(390px,calc(100vw - 24px));height:min(600px,calc(100svh - 90px));display:flex;flex-direction:column;border-radius:22px;background:linear-gradient(160deg,#241d57,#120e2b);border:1px solid #4a3fa0;box-shadow:0 0 60px rgba(124,92,255,.35),0 30px 60px rgba(0,0,0,.5);transform-origin:top right;animation:aiIn .45s cubic-bezier(.2,.8,.2,1);overflow:hidden}
+.ai[hidden]{display:none}
+@keyframes aiIn{from{transform:perspective(900px) rotateX(-28deg) rotateY(14deg) scale(.88);opacity:0}}
+.ai-h{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid #2f2a63}
+.ai-h b{font:800 16px var(--d)}.ai-h small{display:block;color:var(--mute);font-size:12px}
+.ai-h button{margin-left:auto;background:none;border:0;color:var(--mute);font-size:26px;line-height:1;cursor:pointer}
+.ai-m{flex:1;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px;overscroll-behavior:contain}
+.ai-m .bub{max-width:88%}
+.ai-go{align-self:flex-start;margin-top:-2px}
+.ai-q{display:flex;flex-wrap:wrap;gap:6px;padding:0 14px 10px}.ai-q[hidden]{display:none}
+.ai-q button{border:1px solid #3a3080;background:rgba(255,255,255,.05);color:var(--ice);border-radius:99px;padding:6px 12px;font:400 13px var(--b);cursor:pointer}
+.ai-q button:hover{border-color:var(--cy)}
+.ai-f{display:flex;gap:8px;padding:12px;border-top:1px solid #2f2a63}.ai-f input{flex:1;min-width:0}
+.dots span{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--mute);margin:0 2px;animation:dt 1s infinite}
+.dots span:nth-child(2){animation-delay:.15s}.dots span:nth-child(3){animation-delay:.3s}
+@keyframes dt{50%{transform:translateY(-4px);opacity:.5}}
+@media(prefers-reduced-motion:reduce){.ai,.ai-b i,.orbi,.dots span{animation:none}}
+/* 3D bot */
+.aiw{position:relative}
+.ai-b{padding:3px 14px 3px 7px}
+.ai-b .bot{width:30px;height:34px}
+.bot{display:block;position:relative;width:38px;height:42px;flex:none;perspective:260px;animation:botf 3.4s ease-in-out infinite}
+.bot.lg{width:46px;height:52px}
+@keyframes botf{50%{transform:translateY(-3px)}}
+.bot .hd{position:absolute;left:3px;right:3px;top:9px;bottom:2px;transform-style:preserve-3d;transform:rotateY(var(--ry,-12deg)) rotateX(var(--rx,4deg));transition:transform .18s ease-out}
+.bot .hd::before,.bot .hd::after{content:"";position:absolute;inset:0;border-radius:11px}
+.bot .hd::before{background:#3b2fa8;transform:translateZ(-4px)}
+.bot .hd::after{background:#241b73;transform:translateZ(-8px)}
+.bot .fc{position:absolute;inset:0;border-radius:11px;background:linear-gradient(145deg,#a597ff,#6c8cff 55%,#22d3ee);box-shadow:inset 0 2px 3px rgba(255,255,255,.55),inset 0 -3px 4px rgba(20,10,80,.35),0 0 18px rgba(124,92,255,.55)}
+.bot .scr{position:absolute;left:14%;right:14%;top:22%;bottom:18%;border-radius:8px;background:#0b0920;display:flex;align-items:center;justify-content:center;gap:5px;padding-bottom:3px}
+.bot .eye{width:5px;height:7px;border-radius:3px;background:#5df2ff;box-shadow:0 0 6px #22d3ee;transform:translate(var(--ex,0px),var(--ey,0px));animation:blink 4.5s infinite}
+@keyframes blink{0%,94%,100%{transform:translate(var(--ex,0px),var(--ey,0px)) scaleY(1)}97%{transform:translate(var(--ex,0px),var(--ey,0px)) scaleY(.1)}}
+.bot .mth{position:absolute;left:34%;right:34%;bottom:12%;height:3px;border-bottom:2px solid #5df2ff;border-radius:0 0 6px 6px}
+.bot .ear{position:absolute;top:34%;left:-4px;width:5px;height:12px;border-radius:3px;background:#7a64ff;transform:translateZ(-2px)}
+.bot .ear.r{left:auto;right:-4px}
+.bot .ant{position:absolute;left:50%;top:-8px;width:2px;height:9px;margin-left:-1px;background:#9aa4ff;transform:translateZ(-2px)}
+.bot .ant::after{content:"";position:absolute;left:50%;top:-5px;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:var(--peach);box-shadow:0 0 8px var(--peach);animation:antp 1.6s ease-in-out infinite}
+@keyframes antp{50%{transform:scale(1.3);opacity:.7}}
+.ai-nudge{position:absolute;top:calc(100% + 10px);right:0;white-space:nowrap;background:#fff;color:#120e2b;border-radius:14px;padding:8px 12px;font:500 13px var(--b);box-shadow:0 8px 24px rgba(0,0,0,.4);animation:aiIn .4s ease}
+.ai-nudge[hidden]{display:none}
+.ai-nudge::before{content:"";position:absolute;top:-5px;right:34px;border:5px solid transparent;border-top:0;border-bottom-color:#fff}
+.ai-sg{display:flex;flex-wrap:wrap;gap:6px}
+.ai-sg button{border:1px solid #3a3080;background:rgba(255,255,255,.05);color:var(--ice);border-radius:99px;padding:6px 12px;font:400 13px var(--b);cursor:pointer;animation:aiIn .35s ease}
+.ai-sg button:hover{border-color:var(--cy)}
+@media(prefers-reduced-motion:reduce){.bot,.bot .eye,.bot .ant::after,.ai-nudge,.ai-sg button{animation:none}}
 /* ---- phone layout (desktop is untouched) ---- */
 @media(max-width:760px){
  input,select,textarea{font-size:16px}
@@ -235,13 +310,22 @@ details{border-bottom:1px solid #1f1b4d;padding:16px 0}summary{cursor:pointer;fo
  .logo{font-size:18px}
  .stats{grid-template-columns:1fr 1fr}
 }
+@media(max-width:760px){
+ .build .stage{padding:76px 6vw 30px}
+ .layer{transform:translateY(calc((var(--i) - 1.5) * 12px)) rotateX(58deg) rotateZ(-8deg) scale(calc(1 - .04 * (3 - var(--i))))}
+ .stack.on .layer{transform:translateY(calc((var(--i) - 1.5) * 79px)) rotateX(38deg) rotateZ(0deg) scale(1)}
+}
+@media(max-width:760px){
+ .ai-b{padding:3px 6px}.ai-b .lb{display:none}
+ .ai{top:calc(60px + env(safe-area-inset-top,0px));left:8px;right:8px;width:auto;height:calc(100svh - 72px)}
+}
 </style>
 </head>
 <body>
 <nav>
  <a class="logo" href="#top">Op<i>O</i>creators</a>
  <div class="l"><a href="#how">How it works</a><a href="#browse">Browse creators</a><a href="#features">Features</a><a href="#pricing">Pricing</a><a href="#join">For creators</a></div>
- <div class="na"><a class="btn" href="#browse">Find creators</a><span id="auth"></span></div>
+ <div class="na"><a class="btn" href="#browse">Find creators</a><span id="auth"></span><span class="aiw"><button class="ai-b" onclick="aiToggle()" aria-label="Ask the AI assistant"><span class="bot" aria-hidden="true"><span class="hd"><span class="fc"><span class="scr"><span class="eye"></span><span class="eye"></span><span class="mth"></span></span></span><span class="ear"></span><span class="ear r"></span><span class="ant"></span></span></span><span class="lb">Ask AI</span></button><span class="ai-nudge" id="ai_n" hidden>Hi! Need a hand? 👋</span></span></div>
 </nav>
 
 <header class="hero" id="top">
@@ -256,6 +340,7 @@ details{border-bottom:1px solid #1f1b4d;padding:16px 0}summary{cursor:pointer;fo
     <input id="q" placeholder="Try “skincare reels” or “fitness”" aria-label="Search creators">
     <button class="btn p">Search</button>
    </form>
+   <small class="hint">Drag or swipe the cards sideways to rotate them</small>
   </div>
  </div>
 </header>
@@ -265,7 +350,7 @@ details{border-bottom:1px solid #1f1b4d;padding:16px 0}summary{cursor:pointer;fo
   <div class="stack" id="stack" aria-hidden="true"></div>
   <div class="steps">
    <h2>A campaign, built in four layers.</h2>
-   <p>Keep scrolling and watch the stack come apart: every booking on OpOcreators moves through the same four parts.</p>
+   <p>Every booking on OpOcreators moves through the same four parts.</p>
    <div class="now" id="now">Brief</div>
   </div>
  </div>
@@ -293,13 +378,11 @@ details{border-bottom:1px solid #1f1b4d;padding:16px 0}summary{cursor:pointer;fo
 <div class="bx"><i>⚡</i><h3>Fast turnaround</h3><p>Filter by delivery time and get content in as little as 48 hours.</p></div>
 <div class="bx"><i>♥</i><h3>Saved lists</h3><p>Heart the creators you like and come back to them any time.</p></div>
 </div></section>
-<section class="sec" id="pricing" style="background:#0b0a22"><h2>Simple pricing</h2><p>Start free. Upgrade when you run more campaigns.</p>
-<div class="tog" role="group" aria-label="Billing period"><button aria-pressed="true" onclick="bill(false)">Monthly</button><button aria-pressed="false" onclick="bill(true)">Yearly, save 20%</button></div>
-<div class="plans">
-<div class="pl"><h3>Starter</h3><div class="pr">$0<small> /month</small></div><ul><li>Browse all creators</li><li>Pay per booking</li><li>Escrow protection</li></ul><button class="btn" onclick="openSignup('client')">Start free</button></div>
-<div class="pl hot"><h3>Growth</h3><div class="pr">$<span data-m="49" data-y="39">49</span><small> /month</small></div><ul><li>Everything in Starter</li><li>Smart matching</li><li>Campaign analytics</li><li>Priority support</li></ul><button class="btn p" onclick="openSignup('client')">Choose Growth</button></div>
-<div class="pl"><h3>Scale</h3><div class="pr">$<span data-m="199" data-y="159">199</span><small> /month</small></div><ul><li>Everything in Growth</li><li>Team seats</li><li>Custom contracts</li><li>Dedicated manager</li></ul><button class="btn" onclick="openSignup('client')">Choose Scale</button></div>
-</div></section>
+<section class="sec" id="pricing" style="background:#0b0a22"><h2>Plans for every stage</h2><p>Start free. Upgrade when you want more requests, better placement and priority.</p>
+<div class="ctl"><div class="tog" role="group" aria-label="I am a"><button id="rb_c" aria-pressed="true" onclick="setPR('client')">I'm a brand</button><button id="rb_r" aria-pressed="false" onclick="setPR('creator')">I'm a creator</button></div>
+<div class="tog" role="group" aria-label="Billing period"><button id="bp_m" aria-pressed="true" onclick="bill(false)">Monthly</button><button id="bp_y" aria-pressed="false" onclick="bill(true)">Yearly, 2 months free</button></div></div>
+<div class="plans" id="plans"></div>
+<p class="note" style="margin-top:18px">Prices are in Indian rupees. Pay securely with UPI, cards or net banking.</p></section>
 <section class="sec" id="faq"><h2>Questions</h2><div class="faq">
 <details><summary>How do you verify creators?</summary><p>We check each creator's identity, confirm they own the channel they list, and review their portfolio before approving them.</p></details>
 <details><summary>When do creators get paid?</summary><p>Payment sits in escrow after you book. It is released when you approve the finished content.</p></details>
@@ -311,6 +394,12 @@ details{border-bottom:1px solid #1f1b4d;padding:16px 0}summary{cursor:pointer;fo
  <a class="btn" href="#" onclick="openSignup('creator');return false">Join as a creator</a>
 </section>
 <div class="ov" id="ov" onclick="if(event.target===this)closeSignup()"><div class="modal" role="dialog" aria-modal="true" aria-label="Sign up"><button class="x" onclick="closeSignup()" aria-label="Close">×</button><div id="mbody"></div></div></div>
+<div class="ai" id="ai" role="dialog" aria-label="OpOcreators assistant" hidden>
+ <div class="ai-h"><span class="bot lg" aria-hidden="true"><span class="hd"><span class="fc"><span class="scr"><span class="eye"></span><span class="eye"></span><span class="mth"></span></span></span><span class="ear"></span><span class="ear r"></span><span class="ant"></span></span></span><div><b>OpO</b><small>Your AI buddy. Ask me anything!</small></div><button onclick="aiToggle(false)" aria-label="Close assistant">&times;</button></div>
+ <div class="ai-m" id="ai_m" aria-live="polite"></div>
+ <div class="ai-q" id="ai_q"></div>
+ <form class="ai-f" onsubmit="event.preventDefault();aiSend()"><input id="ai_t" maxlength="500" placeholder="Type your question" aria-label="Message the assistant" autocomplete="off"><button class="btn p">Send</button></form>
+</div>
 <div class="toast" id="toast" role="status"></div>
 
 <script>
@@ -348,16 +437,7 @@ const layers=[...stack.children];
 
 function clamp(v){return Math.max(0,Math.min(1,v))}
 function prog(el){const r=el.getBoundingClientRect();return clamp(-r.top/(r.height-innerHeight))}
-function tick(){document.documentElement.style.setProperty("--p",(scrollY/Math.max(1,document.body.scrollHeight-innerHeight)).toFixed(4));
- const h=prog(document.querySelector(".hero"));
- ring.style.transform=`rotateX(-6deg) rotateY(${-h*300}deg) scale(${1+h*.1})`;
- const b=prog(document.querySelector(".build"));
- const ex=clamp(b*1.6);
- layers.forEach((e,i)=>{
-  const y=(i-1.5)*(24+ex*110)*(innerWidth<760?.5:1);
-  e.style.transform=`translateY(${y}px) rotateX(${58-ex*20}deg) rotateZ(${-8*(1-ex)}deg) scale(${1-.04*(3-i)*(1-ex)})`});
- $("now").textContent=L[Math.min(3,Math.floor(b*4))][0]+" · "+L[Math.min(3,Math.floor(b*4))][1];
-}
+function tick(){const g=$("pg");if(g)g.style.transform="scaleX("+(scrollY/Math.max(1,document.body.scrollHeight-innerHeight)).toFixed(4)+")"}
 let tk=0;const raf=()=>{if(!tk){tk=1;requestAnimationFrame(()=>{tk=0;tick()})}};addEventListener("scroll",raf,{passive:true});addEventListener("resize",raf);tick();
 
 // marketplace
@@ -365,8 +445,8 @@ function render(){
  const q=term.toLowerCase();
  const list=creators.filter(c=>(cat==="All"||c[1]===cat)&&(!q||c.slice(0,3).join(" ").toLowerCase().includes(q)));
  if(sortBy==="low")list.sort((a,b)=>a[3]-b[3]);else if(sortBy==="high")list.sort((a,b)=>b[3]-a[3]);
- $("grid").innerHTML=list.length?list.map(c=>`<article class="cr" tabindex="0" onclick="quick(${creators.indexOf(c)})">
-  <div class="pic" style="background:${bg(c[4])}">${c[0].split(" ").map(w=>w[0]).join("")}<button class="fav" aria-label="Save ${c[0]}" onclick="event.stopPropagation();fav(${creators.indexOf(c)})">${favs.has(creators.indexOf(c))?"♥":"♡"}</button></div>
+ $("grid").innerHTML=list.length?list.map(c=>`<article class="cr${c[6]&&c[6].plan==="advanced"?" top":""}" tabindex="0" onclick="quick(${creators.indexOf(c)})">
+  <div class="pic" style="background:${bg(c[4])}">${c[0].split(" ").map(w=>w[0]).join("")}${c[6]&&c[6].plan&&c[6].plan!=="free"?'<span class="pbd '+c[6].plan+'">'+({basic:"Pro",premium:"Featured",advanced:"Top creator"})[c[6].plan]+'</span>':""}<button class="fav" aria-label="Save ${c[0]}" onclick="event.stopPropagation();fav(${creators.indexOf(c)})">${favs.has(creators.indexOf(c))?"♥":"♡"}</button></div>
   <div class="in"><h3>${c[0]}</h3><small>${c[1]} · ${c[2]}</small>
   <div class="row"><span>From <b>$${c[3]}</b></span><span class="btn p" style="padding:7px 14px">Book</span></div></div></article>`).join(""):`<div class="empty">No creators match “${term}”. Try another category.</div>`;
 }
@@ -409,21 +489,21 @@ function back(){collect();if(step===0)roles();else{step--;form()}}
 async function submit(){
 const btn=mb.querySelector(".btn.p");if(btn){btn.disabled=true;btn.textContent="Sending..."}
 let j={};
-try{const r=await fetch("/api/signup",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({role,data})});j=await r.json().catch(()=>({}));if(!r.ok)throw j.error||0}
+try{const r=await net("/api/signup",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({role,data})});j=await r.json().catch(()=>({}));if(!r.ok)throw j.error||0}
 catch(e){if(btn){btn.disabled=false;btn.textContent="Submit application"}
 if(typeof e==="string"&&/registered/.test(e)){toast(e);loginForm(data.email);return}
-toast(typeof e==="string"?e:"Could not send. Please try again.");return}
+toast(typeof e==="string"?e:(e&&e.message)||"Could not send. Please try again.");return}
 setAuth(j.token,j.profile);
 const c=role==="client";
 swap('<div class="done"><div class="badge"></div><h2>Thanks, '+esc(data.name.split(" ")[0])+'. Your application is in.</h2><p class="s">'+(c?"We'll review "+esc(data.biz)+"'s website and email, then confirm your account within 1–2 days.":"We'll check your profile and portfolio, then confirm your creator account within 1–2 days.")+'</p><button class="btn p" onclick="closeSignup()">Back to site</button></div>')}
 // ---- polish and extra features ----
 let sortBy="rec";const favs=new Set();
 function fav(i){favs.has(i)?favs.delete(i):favs.add(i);toast(creators[i][0]+(favs.has(i)?" saved":" removed"));render()}
-function bill(y){document.querySelectorAll(".tog button").forEach((b,i)=>b.setAttribute("aria-pressed",String(!!i===y)));document.querySelectorAll("[data-m]").forEach(e=>e.textContent=y?e.dataset.y:e.dataset.m)}
+function bill(y){per=y?"year":"month";$("bp_m").setAttribute("aria-pressed",String(!y));$("bp_y").setAttribute("aria-pressed",String(y));renderPlans()}
 const mqd=document.querySelector(".mq div");mqd.innerHTML+=mqd.innerHTML;
 const gl=document.createElement("div");gl.className="glow";document.body.appendChild(gl);
-let gx=0,gy=0,tx=0,ty=0;addEventListener("pointermove",e=>{tx=e.clientX;ty=e.clientY},{passive:true});
-(function g(){gx+=(tx-gx)*.12;gy+=(ty-gy)*.12;gl.style.transform="translate("+gx+"px,"+gy+"px)";requestAnimationFrame(g)})();
+let gx=0,gy=0,tx=0,ty=0,gon=0;addEventListener("pointermove",e=>{tx=e.clientX;ty=e.clientY;if(!gon){gon=1;requestAnimationFrame(g)}},{passive:true});
+function g(){gx+=(tx-gx)*.12;gy+=(ty-gy)*.12;gl.style.transform="translate("+gx+"px,"+gy+"px)";if(Math.abs(tx-gx)+Math.abs(ty-gy)>.5)requestAnimationFrame(g);else gon=0}
 $("grid").addEventListener("pointermove",e=>{const k=e.target.closest(".cr");if(!k)return;const r=k.getBoundingClientRect(),px=(e.clientX-r.left)/r.width-.5,py=(e.clientY-r.top)/r.height-.5;k.style.transform="perspective(700px) rotateY("+px*10+"deg) rotateX("+-py*10+"deg) translateY(-4px)"});
 $("grid").addEventListener("pointerout",e=>{const k=e.target.closest(".cr");if(k)k.style.transform=""});
 new IntersectionObserver((es,o)=>es.forEach(e=>{if(!e.isIntersecting)return;o.unobserve(e.target);e.target.querySelectorAll("b[data-n]").forEach(b=>{const n=+b.dataset.n,t0=performance.now();(function s(t){const p=Math.min(1,(t-t0)/1400);b.textContent=Math.round(n*(1-Math.pow(1-p,3))).toLocaleString();if(p<1)requestAnimationFrame(s)})(t0)})}),{threshold:.4}).observe($("stats"));
@@ -437,12 +517,12 @@ new IntersectionObserver(e=>{run=e[0].isIntersecting}).observe(c)})();
 // ---- accounts ----
 const LS={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},del:k=>{try{localStorage.removeItem(k)}catch(e){}}};
 let me=null;try{me=JSON.parse(LS.get("opo_me")||"null")}catch(e){}
-function setAuth(t,p){if(t){LS.set("opo_t",t);LS.set("opo_member","1")}if(p){me=p;LS.set("opo_me",JSON.stringify(p))}renderAuth();refreshBadge()}
-function logout(){LS.del("opo_t");LS.del("opo_me");me=null;renderAuth();toast("Logged out")}
+function setAuth(t,p){if(t){LS.set("opo_t",t);LS.set("opo_member","1")}if(p){me=p;LS.set("opo_me",JSON.stringify(p))}renderAuth();refreshBadge();if(me&&me.role)setPR(me.role)}
+function logout(){LS.del("opo_t");LS.del("opo_me");me=null;renderAuth();renderPlans();aiReset();toast("Logged out")}
 function renderAuth(){
  const a=$("auth");
  if(me&&LS.get("opo_t")){const ini=esc((me.name||"?").split(" ").map(w=>w[0]).slice(0,2).join("").toUpperCase());
-  a.innerHTML='<div class="pf"><button class="pc" aria-haspopup="true" aria-expanded="false" onclick="pmenu(this)"><i>'+ini+'</i><span>'+esc((me.name||"").split(" ")[0])+'</span></button><div class="pm" id="pm"><b>'+esc(me.name)+'</b><small>'+esc(me.email)+'</small><span class="tg">'+esc(me.role)+'</span><span class="tg '+esc(me.status)+'">'+(me.status==="pending"?"under review":esc(me.status))+'</span>'+(me.status==="approved"?'<button class="btn" style="margin-bottom:8px" onclick="openInbox()">Messages<span id="mbadge"></span></button>':'<small style="margin:0 0 10px">Messages unlock once your account is approved.</small>')+'<button class="btn" onclick="logout()">Log out</button></div></div>'}
+  a.innerHTML='<div class="pf"><button class="pc" aria-haspopup="true" aria-expanded="false" onclick="pmenu(this)"><i>'+ini+'</i><span>'+esc((me.name||"").split(" ")[0])+'</span></button><div class="pm" id="pm"><b>'+esc(me.name)+'</b><small>'+esc(me.email)+'</small><span class="tg">'+esc(me.role)+'</span><span class="tg '+esc(me.status)+'">'+(me.status==="pending"?"under review":esc(me.status))+'</span>'+(me.status==="approved"?'<span class="tg plan">'+esc(me.plan||"free")+' plan</span>':"")+(me.role==="creator"&&me.views!=null&&["premium","advanced"].includes(me.plan)?'<small>Profile views: '+esc(me.views)+'</small>':"")+(me.status==="approved"&&(me.plan||"free")==="free"?'<a class="btn" href="#pricing" style="display:block;text-align:center;margin-bottom:8px" onclick="document.getElementById(\'pm\').classList.remove(\'on\')">Upgrade plan</a>':"")+(me.status==="approved"?'<button class="btn" style="margin-bottom:8px" onclick="openInbox()">Messages<span id="mbadge"></span></button>':'<small style="margin:0 0 10px">Messages unlock once your account is approved.</small>')+'<button class="btn" onclick="logout()">Log out</button></div></div>'}
  else if(LS.get("opo_member"))a.innerHTML='<button class="btn p" onclick="loginForm()">Log in</button>';
  else a.innerHTML='<button class="lk" onclick="loginForm()">Log in</button><button class="btn p" onclick="openSignup()">Sign up</button>'}
 function pmenu(b){const o=$("pm").classList.toggle("on");b.setAttribute("aria-expanded",o)}
@@ -454,11 +534,11 @@ async function doLogin(){
  const e=$("l_e").value.trim(),p=$("l_p").value,b=$("l_b"),er=$("l_err");
  if(!e||!p){er.textContent="Enter your email and password";return}
  b.disabled=true;b.textContent="Logging in...";er.textContent="";
- try{const r=await fetch("/api/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:e,password:p})}),j=await r.json().catch(()=>({}));
+ try{const r=await net("/api/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:e,password:p})}),j=await r.json().catch(()=>({}));
   if(!r.ok)throw j.error||"Could not log in. Try again.";
   setAuth(j.token,j.profile);
   swap('<div class="done"><div class="badge"></div><h2>Welcome back, '+esc((j.profile.name||"").split(" ")[0])+'.</h2><p class="s">You are logged in.</p></div>',()=>setTimeout(closeSignup,1400))}
- catch(x){b.disabled=false;b.textContent="Log in";er.textContent=typeof x==="string"?x:"Could not log in. Try again."}}
+ catch(x){b.disabled=false;b.textContent="Log in";er.textContent=typeof x==="string"?x:(x&&x.message)||"Could not log in. Try again."}}
 renderAuth();
 (async()=>{const t=LS.get("opo_t");if(!t)return;try{const r=await fetch("/api/me",{headers:{Authorization:"Bearer "+t}});
  if(r.status===401){LS.del("opo_t");LS.del("opo_me");me=null;renderAuth();toast("Session expired. Please log in.");return}
@@ -467,9 +547,9 @@ renderAuth();
 let chatT,cur=null,curN=0,curS="",inb=[],pc=0;
 const link=(u,t)=>u?'<a href="'+esc(/^https?:/i.test(u)?u:"https://"+u)+'" target="_blank" rel="noopener noreferrer">'+t+'</a>':"";
 async function chat(body){
- const r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+(LS.get("opo_t")||"")},body:JSON.stringify(body)});
+ const r=await net("/api/chat",{method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+(LS.get("opo_t")||"")},body:JSON.stringify(body)});
  const j=await r.json().catch(()=>({}));
- if(!r.ok){if(r.status===401){LS.del("opo_t");LS.del("opo_me");me=null;renderAuth()}throw new Error(j.error||"Something went wrong")}
+ if(!r.ok){if(r.status===401){LS.del("opo_t");LS.del("opo_me");me=null;renderAuth()}const er=new Error(j.error||"Something went wrong");er.upgrade=j.upgrade;throw er}
  return j}
 async function loadCreators(){
  try{const r=await fetch("/api/creators");if(!r.ok)return;const j=await r.json();
@@ -478,7 +558,7 @@ async function loadCreators(){
   creators=j.list.map(p=>{let h=0;for(const ch of p.id)h=(h*31+ch.charCodeAt(0))>>>0;return[p.name||"Creator",p.niche||"Other",p.platform||"Creator",Number(p.rate)||0,G[h%G.length],p.id,p]});
   cats=["All",...new Set(creators.map(c=>c[1]))];cat="All";favs.clear();$("note").textContent="";chips();render()}catch(e){}}
 function quick(i){
- const c=creators[i],p=c[5]&&c[6];
+ const c=creators[i],p=c[5]&&c[6];if(p)viewed(c[5]);
  ov.classList.add("on");document.body.style.overflow="hidden";
  swap('<div class="roles"><div class="role" style="background:'+bg(c[4])+';min-height:260px;cursor:default"><i class="orb"></i><b>'+esc(c[0])+'</b><span>'+esc(c[1])+' · '+esc(c[2])+'</span></div><div><h2>From $'+c[3]+'</h2>'+
  (p?'<p class="s">'+esc(p.bio||"")+'</p><p class="s">'+(p.followers?esc(Number(p.followers).toLocaleString())+' followers · ':"")+link(p.handle,"Profile")+(p.port?" · "+link(p.port,"Best work"):"")+'</p><button class="btn p" onclick="reqForm('+i+')">Send request</button> ':'<p class="s">Sample profile for the demo. Real creators appear here once they are approved.</p><button class="btn p" onclick="openSignup()">Join to hire creators</button> ')+
@@ -494,14 +574,14 @@ async function sendReq(i){
  b.disabled=true;b.textContent="Sending...";er.textContent="";
  try{const j=await chat({action:"request",creatorId:c[5],text:t});
   swap('<div class="done"><div class="badge"></div><h2>Request sent to '+esc(c[0].split(" ")[0])+'.</h2><p class="s">'+(j.existing?"You already have a conversation with this creator.":"You can chat as soon as they accept.")+'</p><button class="btn p" onclick="openInbox(\''+j.convo+'\')">Open messages</button></div>')}
- catch(x){b.disabled=false;b.textContent="Send request";er.textContent=x.message}}
+ catch(x){b.disabled=false;b.textContent="Send request";er.innerHTML=esc(x.message)+(x.upgrade?' <a href="#pricing" onclick="closeSignup()">See plans</a>':"")}}
 async function openInbox(sel){
  ov.classList.add("on");document.body.style.overflow="hidden";
  swap('<h2>Messages</h2><div class="inb"><div class="cl" id="cl"></div><div class="th" id="th"><p class="s" style="margin:20px 8px">Select a conversation.</p></div></div>',async()=>{await loadInbox(sel);clearInterval(chatT);chatT=setInterval(poll,4000)})}
 async function loadInbox(sel){
  if(!$("cl"))return;
  try{inb=(await chat({action:"inbox"})).list}catch(e){$("cl").innerHTML='<p class="s">'+esc(e.message)+'</p>';return}
- $("cl").innerHTML=inb.length?inb.map(c=>'<button class="ci'+(c.id===cur?" on":"")+'" onclick="openThread(\''+c.id+'\')"><b>'+esc(c.other)+'</b><small>'+(c.status==="pending"?(c.mine?"Request sent":"New request"):c.status==="declined"?"Declined":esc(c.last||"Accepted"))+'</small></button>').join(""):'<p class="s">No messages yet. Clients can send a request from a creator profile.</p>';
+ $("cl").innerHTML=inb.length?inb.map(c=>'<button class="ci'+(c.id===cur?" on":"")+'" onclick="openThread(\''+c.id+'\')"><b>'+esc(c.other)+'</b><small>'+(c.status==="pending"?(c.mine?"Request sent":"New request"+(c.prio&&c.prio!=="free"?" · "+c.prio+" priority":"")):c.status==="declined"?"Declined":esc(c.last||"Accepted"))+'</small></button>').join(""):'<p class="s">No messages yet. Clients can send a request from a creator profile.</p>';
  if(sel)openThread(sel)}
 async function openThread(id){
  cur=id;
@@ -538,6 +618,115 @@ async function refreshBadge(){
   const x=document.querySelector(".pc");if(x)x.classList.toggle("dot",n>0)}catch(e){}}
 setInterval(()=>{if(!document.hidden)refreshBadge()},60000);
 loadCreators();
+// ---- hero ring: drag or swipe sideways to rotate; vertical swipes just scroll the page ----
+(function(){
+ const st=document.querySelector(".hero .stage"),rm=matchMedia("(prefers-reduced-motion:reduce)").matches;
+ let a=0,v=0,drag=false,lx=0,last=performance.now(),vis=true;const AUTO=rm?0:.12;
+ function frame(t){
+  const dt=Math.min(48,t-last)/16.667;last=t;
+  if(vis){if(!drag){v+=(AUTO-v)*Math.min(1,.04*dt);a+=v*dt}
+   ring.style.transform="rotateX(-6deg) rotateY("+a.toFixed(2)+"deg)"}
+  requestAnimationFrame(frame)}
+ requestAnimationFrame(frame);
+ st.addEventListener("pointerdown",e=>{if(e.target.closest("input,button,form,a"))return;drag=true;lx=e.clientX;v=0;st.classList.add("drg");try{st.setPointerCapture(e.pointerId)}catch(x){}});
+ st.addEventListener("pointermove",e=>{if(!drag)return;const dx=(e.clientX-lx)*.35;lx=e.clientX;a+=dx;v=dx*.6+v*.4});
+ const end=()=>{drag=false;st.classList.remove("drg")};
+ st.addEventListener("pointerup",end);st.addEventListener("pointercancel",end);
+ st.addEventListener("wheel",e=>{if(Math.abs(e.deltaX)>Math.abs(e.deltaY)){e.preventDefault();a+=e.deltaX*.25;v=e.deltaX*.04}},{passive:false});
+ new IntersectionObserver(es=>{vis=es[0].isIntersecting;last=performance.now()}).observe(st);
+})();
+// ---- four layers: open up once when the section comes into view, then step through the parts ----
+let bi=0,bt;
+layers.forEach((e,i)=>e.style.setProperty("--i",i));
+function buildStep(){const k=bi%4;layers.forEach((e,i)=>e.classList.toggle("act",i===k));$("now").textContent=L[k][0]+" · "+L[k][1];bi++}
+new IntersectionObserver(es=>{clearInterval(bt);if(es[0].isIntersecting){stack.classList.add("on");buildStep();bt=setInterval(buildStep,2200)}},{threshold:.35}).observe(document.querySelector(".build"));
+// ---- plans (rupees) ----
+const PLAN=[["free","Free",0,0],["basic","Basic",49,490],["premium","Premium",149,1490],["advanced","Advanced",300,3000]];
+const FT={
+client:{
+ free:["2 creator requests every month","Browse and save every creator","Chat with creators who accept","Standard place in creators' inboxes"],
+ basic:["Everything in Free","10 creator requests every month","Higher place in creators' inboxes"],
+ premium:["Everything in Basic","30 creator requests every month","Priority tag on every request","Shown above Basic and Free requests"],
+ advanced:["Everything in Premium","Unlimited requests (fair use)","Always first in the creator's inbox","Gold Advanced priority tag"]},
+creator:{
+ free:["Public profile seen by every brand","Unlimited incoming requests","Chat with brands you accept","Standard place in the marketplace"],
+ basic:["Everything in Free","Pro badge on your profile card","Listed above free creators"],
+ premium:["Everything in Basic","Featured badge","Listed above Basic creators","Profile view counter"],
+ advanced:["Everything in Premium","Top creator badge, listed first","Gold glowing profile card"]}};
+let pr="client",per="month";
+function setPR(r){pr=r;$("rb_c").setAttribute("aria-pressed",String(r==="client"));$("rb_r").setAttribute("aria-pressed",String(r==="creator"));renderPlans()}
+function renderPlans(){
+ const cur=me&&LS.get("opo_t")?(me.plan||"free"):null;
+ $("plans").innerHTML=PLAN.map(p=>{const id=p[0],n=p[1],m=p[2],y=p[3],price=per==="year"?y:m,sv=per==="year"&&m?"Save ₹"+(m*12-y)+" a year":"",is=cur===id;
+  return '<div class="pl'+(id==="premium"?" hot":"")+'">'+(id==="premium"?'<span class="pbd">Most popular</span>':"")+'<h3>'+n+'</h3><div class="pr">₹'+price.toLocaleString("en-IN")+'<small> /'+(price?per:"forever")+'</small></div><div class="sv">'+sv+'</div><ul>'+FT[pr][id].map(f=>'<li>'+f+'</li>').join("")+'</ul><button class="btn'+(id==="premium"?" p":"")+'" '+(is?"disabled":'onclick="choose(\''+id+'\')"')+'>'+(is?"Your current plan":id==="free"?"Start free":"Choose "+n)+'</button></div>'}).join("")}
+async function pay(body){
+ const r=await net("/api/pay",{method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+(LS.get("opo_t")||"")},body:JSON.stringify(body)});
+ const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||"Something went wrong");return j}
+async function choose(id){
+ const on=me&&LS.get("opo_t");
+ if(id==="free"){on?toast("You are on the free plan already"):openSignup(pr);return}
+ if(!on){toast("Create your free account first, then pick a plan");openSignup(pr);return}
+ if(me.status!=="approved"){toast("Your account is under review. You can upgrade once it is approved.");return}
+ if(me.role!==pr){toast("These plans are for "+(pr==="client"?"brands":"creators")+". Switch the toggle to see yours.");return}
+ try{const o=await pay({action:"order",plan:id,period:per});
+  if(!window.Razorpay)await new Promise((ok,no)=>{const s=document.createElement("script");s.src="https://checkout.razorpay.com/v1/checkout.js";s.onload=ok;s.onerror=no;document.head.appendChild(s)});
+  new Razorpay({key:o.key,amount:o.amount,currency:"INR",order_id:o.order,name:"OpOcreators",description:id[0].toUpperCase()+id.slice(1)+" plan",prefill:{name:o.name,email:o.email},theme:{color:"#7c5cff"},
+   handler:async r=>{try{const v=await pay({action:"verify",order:r.razorpay_order_id,payment:r.razorpay_payment_id,signature:r.razorpay_signature});setAuth(null,v.profile);toast("Plan activated. Enjoy!")}catch(e){toast(e.message)}}}).open()}
+ catch(e){toast(e.message||"Could not start the payment")}}
+function viewed(id){try{if(sessionStorage.getItem("v"+id))return;sessionStorage.setItem("v"+id,"1");fetch("/api/creators?view="+encodeURIComponent(id))}catch(e){}}
+setPR(me&&me.role?me.role:"client");
+// ---- network helper: clear message when the server can't be reached ----
+async function net(url,opts){
+ try{return await fetch(url,opts)}
+ catch(e){throw new Error(location.protocol==="file:"?"This page is opened as a file on your computer, so it can't reach the server. Please open your live website link (the Vercel one) instead.":"Hmm, I can't reach the server right now. Please check your internet and try again in a moment.")}}
+// ---- AI assistant ----
+const AIW=$("ai"),aim=$("ai_m"),AIQ=["How does it work?","Plans and pricing","Tips for creators","Talk to support"];
+let aiH=[],aiBusy=false,aiTyping=false;
+try{aiH=JSON.parse(sessionStorage.getItem("opo_ai")||"[]")}catch(e){}
+const GO={signup:["Sign up",()=>openSignup()],login:["Log in",()=>loginForm()],pricing:["See plans",()=>$("pricing").scrollIntoView()],browse:["Browse creators",()=>$("browse").scrollIntoView()],messages:["Open messages",()=>openInbox()]};
+function aiSave(){try{sessionStorage.setItem("opo_ai",JSON.stringify(aiH.slice(-20)))}catch(e){}}
+function aiMsg(role,text,live){
+ const go=/\{\{go:(\w+)\}\}/.exec(text),qs=[...text.matchAll(/\{\{q:([^}]{1,60})\}\}/g)].map(m=>m[1].trim()).slice(0,3);
+ const clean=text.replace(/\{\{[^}]*\}\}/g,"").trim(),d=document.createElement("div");
+ aim.querySelectorAll(".ai-sg").forEach(x=>x.remove());
+ d.className="bub"+(role==="user"?" me":"");aim.appendChild(d);
+ const fin=()=>{aiTyping=false;
+  if(role!=="user"){
+   if(go&&GO[go[1]]){const b=document.createElement("button");b.className="btn p ai-go";b.textContent=GO[go[1]][0];b.onclick=()=>{aiToggle(false);GO[go[1]][1]()};aim.appendChild(b)}
+   if(qs.length){const s=document.createElement("div");s.className="ai-sg";qs.forEach(q=>{const b=document.createElement("button");b.textContent=q;b.onclick=()=>aiSend(q);s.appendChild(b)});aim.appendChild(s)}}
+  aim.scrollTop=aim.scrollHeight};
+ if(live&&role!=="user"&&!matchMedia("(prefers-reduced-motion:reduce)").matches){
+  aiTyping=true;const n=clean.length,step=Math.max(2,Math.ceil(n/60));let i=0;
+  const t=setInterval(()=>{i+=step;d.textContent=clean.slice(0,i);aim.scrollTop=aim.scrollHeight;if(i>=n){clearInterval(t);fin()}},18)}
+ else{d.textContent=clean;fin()}}
+function aiStart(){
+ aim.innerHTML="";
+ aiMsg("assistant","Hey"+(me&&me.name?" "+me.name.split(" ")[0]:"")+"! 👋 I'm OpO, your AI buddy for OpOcreators. Ask me how it all works, which plan to pick, how to get booked or how to hire the right creator. Hinglish bhi chalega! 😄");
+ aiH.forEach(m=>aiMsg(m.role,m.content));
+ $("ai_q").innerHTML=AIQ.map(q=>'<button onclick="aiSend(this.textContent)">'+q+'</button>').join("");
+ $("ai_q").hidden=aiH.length>0}
+function aiToggle(open){
+ const o=open===undefined?AIW.hidden:open;AIW.hidden=!o;$("ai_n").hidden=true;
+ if(o){if(!aim.children.length)aiStart();if(matchMedia("(hover:hover)").matches)$("ai_t").focus()}}
+function aiReset(){aiH=[];aiSave();aim.innerHTML="";if(!AIW.hidden)aiStart()}
+async function aiSend(text){
+ text=(text||$("ai_t").value).trim();if(!text||aiBusy||aiTyping)return;
+ $("ai_t").value="";$("ai_q").hidden=true;
+ aiH.push({role:"user",content:text});aiMsg("user",text);aiSave();aiBusy=true;
+ const d=document.createElement("div");d.className="bub";d.innerHTML='<span class="dots"><span></span><span></span><span></span></span>';aim.appendChild(d);aim.scrollTop=aim.scrollHeight;
+ try{const r=await net("/api/assistant",{method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+(LS.get("opo_t")||"")},body:JSON.stringify({messages:aiH.slice(-14)})});
+  const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||"The assistant is busy. Please try again.");
+  d.remove();aiH.push({role:"assistant",content:j.reply});aiMsg("assistant",j.reply,true);aiSave()}
+ catch(e){d.remove();aiMsg("assistant",e.message||"Something went wrong. Please try again.")}
+ aiBusy=false}
+addEventListener("keydown",e=>{if(e.key==="Escape"&&!AIW.hidden&&!ov.classList.contains("on"))aiToggle(false)});
+// the bot turns its head and eyes toward the pointer
+const BH=[...document.querySelectorAll(".bot .hd")],BE=[...document.querySelectorAll(".bot .eye")];let bq=0,bx=0,by=0;
+addEventListener("pointermove",e=>{bx=e.clientX/innerWidth-.5;by=e.clientY/innerHeight-.5;if(bq)return;bq=1;requestAnimationFrame(()=>{bq=0;
+ BH.forEach(h=>{h.style.setProperty("--ry",(bx*46).toFixed(1)+"deg");h.style.setProperty("--rx",(-by*34).toFixed(1)+"deg")});
+ BE.forEach(x=>{x.style.setProperty("--ex",(bx*3).toFixed(1)+"px");x.style.setProperty("--ey",(by*3).toFixed(1)+"px")})})},{passive:true});
+// a friendly nudge, once per visit
+setTimeout(()=>{try{if(sessionStorage.getItem("opo_n")||!AIW.hidden)return;sessionStorage.setItem("opo_n","1");$("ai_n").hidden=false;setTimeout(()=>{$("ai_n").hidden=true},7000)}catch(e){}},8000);
 chips();render();
 </script>
 </body>

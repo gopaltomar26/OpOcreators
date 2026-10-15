@@ -68,7 +68,7 @@ header{display:flex;justify-content:space-between;align-items:center;flex-wrap:w
 <div class="hb"><button class="b" onclick="load()">Refresh</button><button class="b" onclick="csv()">Export CSV</button><button class="b" onclick="out()">Log out</button></div></header>
 <div class="stats" id="stats"></div>
 <div class="bar">
-<div class="tabs" role="group" aria-label="Filter by type"><button data-t="all" onclick="tab='all';draw()">All</button><button data-t="client" onclick="tab='client';draw()">Clients</button><button data-t="creator" onclick="tab='creator';draw()">Creators</button></div>
+<div class="tabs" role="group" aria-label="Filter by type"><button data-t="all" onclick="tab='all';draw()">All</button><button data-t="client" onclick="tab='client';draw()">Clients</button><button data-t="creator" onclick="tab='creator';draw()">Creators</button><button data-t="tickets" onclick="tab='tickets';draw()">Tickets</button></div>
 <select aria-label="Filter by status" onchange="st=this.value;draw()"><option value="all">Any status</option><option value="pending">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option></select>
 <input type="search" placeholder="Search name, email, business..." aria-label="Search" oninput="q=this.value;draw()">
 </div>
@@ -77,17 +77,17 @@ header{display:flex;justify-content:space-between;align-items:center;flex-wrap:w
 
 <script>
 const $=s=>document.querySelector(s),esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const LBL={name:"Name",email:"Email",phone:"Phone",biz:"Business",web:"Website or Instagram",type:"Business type",budget:"Monthly budget",need:"Content needed",reg:"Registration no.",city:"City",platform:"Platform",handle:"Profile link",followers:"Followers",niche:"Niche",port:"Best work",rate:"Starting price (USD)"};
+const LBL={name:"Name",email:"Email",phone:"Phone",biz:"Business",web:"Website or Instagram",type:"Business type",budget:"Monthly budget",need:"Content needed",reg:"Registration no.",city:"City",platform:"Platform",handle:"Profile link",followers:"Followers",niche:"Niche",port:"Best work",rate:"Starting price (USD)",bio:"Bio"};
 const LINKS=["web","handle","port"];
-let key=sessionStorage.getItem("k")||"",all=[],tab="all",st="all",q="",open=new Set();
+let key=sessionStorage.getItem("k")||"",all=[],tix=[],tab="all",st="all",q="",open=new Set();
 
-async function api(m,body){
- const r=await fetch("/api/admin",{method:m,headers:{"x-admin-key":key,"Content-Type":"application/json"},body:body?JSON.stringify(body):undefined});
+async function api(m,body,qs){
+ const r=await fetch("/api/admin"+(qs||""),{method:m,headers:{"x-admin-key":key,"Content-Type":"application/json"},body:body?JSON.stringify(body):undefined});
  const j=await r.json().catch(()=>({}));
  if(!r.ok)throw Object.assign(new Error(j.error||"Something went wrong"),{code:r.status});
  return j}
 async function load(manual){
- try{all=(await api("GET")).list;$("#login").hidden=true;$("#app").hidden=false;draw()}
+ try{all=(await api("GET")).list;tix=(await api("GET",null,"?tickets=1")).list;$("#login").hidden=true;$("#app").hidden=false;draw()}
  catch(e){if(e.code===401){sessionStorage.removeItem("k");key="";$("#app").hidden=true;$("#login").hidden=false;$("#lerr").textContent=manual?"Wrong password. Try again.":""}else toast(e.message)}}
 function signin(){key=$("#pw").value;sessionStorage.setItem("k",key);load(true)}
 function out(){sessionStorage.removeItem("k");key="";all=[];$("#app").hidden=true;$("#login").hidden=false;$("#pw").value=""}
@@ -99,17 +99,23 @@ function card(r){
   +(r.status!=="approved"?'<button class="b g" onclick="act(\''+r.id+'\',\'approved\')">Approve</button>':"")
   +(r.status!=="rejected"?'<button class="b r" onclick="act(\''+r.id+'\',\'rejected\')">Reject</button>':"")
   +(r.status!=="pending"?'<button class="b" onclick="act(\''+r.id+'\',\'pending\')">Set to pending</button>':"")
+  +'<select id="pl_'+r.id+'" style="width:auto;padding:8px 12px" aria-label="Plan">'+["free","basic","premium","advanced"].map(p=>'<option'+((r.plan||"free")===p?" selected":"")+'>'+p+'</option>').join("")+'</select><button class="b" onclick="setPlan(\''+r.id+'\')">Set plan (30 days)</button>'
   +'<button class="b" onclick="del(\''+r.id+'\')">Delete</button></div></div>':"";
  return '<article class="it"><button class="hd" aria-expanded="'+open.has(r.id)+'" onclick="tg(\''+r.id+'\')"><div class="av '+r.role+'">'+esc(ini)+'</div><div class="who"><b>'+esc(d.name)+'</b><small>'+esc(d.email)+'</small></div><span class="tag">'+r.role+'</span><span class="st '+r.status+'">'+r.status+'</span><time>'+fmt(r.createdAt)+'</time></button>'+body+'</article>'}
 function draw(){
  const n=f=>all.filter(f).length;
- $("#stats").innerHTML=[["Total sign-ups",all.length],["Clients",n(r=>r.role==="client")],["Creators",n(r=>r.role==="creator")],["Pending review",n(r=>r.status==="pending")],["Approved",n(r=>r.status==="approved")]].map(s=>'<div class="sc"><b>'+s[1]+'</b><span>'+s[0]+'</span></div>').join("");
- const t=q.toLowerCase(),L=all.filter(r=>(tab==="all"||r.role===tab)&&(st==="all"||r.status===st)&&(!t||JSON.stringify(r.data).toLowerCase().includes(t)));
+ $("#stats").innerHTML=[["Total sign-ups",all.length],["Clients",n(r=>r.role==="client")],["Creators",n(r=>r.role==="creator")],["Pending review",n(r=>r.status==="pending")],["Approved",n(r=>r.status==="approved")],["Open tickets",tix.filter(t=>t.status==="open").length]].map(s=>'<div class="sc"><b>'+s[1]+'</b><span>'+s[0]+'</span></div>').join("");
+ if(tab==="tickets"){drawTix();return}const t=q.toLowerCase(),L=all.filter(r=>(tab==="all"||r.role===tab)&&(st==="all"||r.status===st)&&(!t||JSON.stringify(r.data).toLowerCase().includes(t)));
  $("#list").innerHTML=L.length?L.map(card).join(""):'<div class="empty">'+(all.length?"No sign-ups match these filters.":"No sign-ups yet. They will appear here as soon as someone applies.")+'</div>';
  document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.t===tab)))}
 function tg(id){open.has(id)?open.delete(id):open.add(id);draw()}
 async function act(id,a){try{await api("POST",{id,action:a});toast("Marked "+a);await load()}catch(e){toast(e.message)}}
 async function del(id){if(!confirm("Delete this sign-up permanently?"))return;try{await api("POST",{id,action:"delete"});open.delete(id);toast("Deleted");await load()}catch(e){toast(e.message)}}
+async function setPlan(id){try{await api("POST",{id,action:"setplan",plan:$("#pl_"+id).value,days:30});toast("Plan updated");await load()}catch(e){toast(e.message)}}
+function drawTix(){
+ document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.t===tab)));
+ $("#list").innerHTML=tix.length?tix.map(t=>'<article class="it"><div class="bd" style="animation:none;border:0"><div class="who"><b>'+esc(t.summary)+'</b><small>'+esc(t.name||"Visitor")+' · '+esc(t.contact||"no contact given")+' · '+fmt(t.createdAt)+'</small></div><div class="kv"><div><small>Status</small><span>'+esc(t.status)+'</span></div></div>'+(t.chat?'<details style="margin:0 0 12px"><summary style="cursor:pointer;color:var(--cy)">Conversation</summary><p style="white-space:pre-wrap;color:var(--mute);margin:8px 0 0">'+esc(t.chat)+'</p></details>':"")+'<div class="ac">'+(t.status!=="resolved"?'<button class="b g" onclick="tk(\''+t.id+'\',\'ticket_resolve\')">Mark resolved</button>':"")+'<button class="b" onclick="tk(\''+t.id+'\',\'ticket_delete\')">Delete</button></div></div></article>').join(""):'<div class="empty">No support tickets yet. When the assistant cannot solve a problem it will appear here.</div>'}
+async function tk(id,a){try{await api("POST",{id,action:a});toast("Done");await load()}catch(e){toast(e.message)}}
 function csv(){
  const keys=[...new Set(all.flatMap(r=>Object.keys(r.data)))],rows=[["role","status","created",...keys]].concat(all.map(r=>[r.role,r.status,r.createdAt,...keys.map(k=>r.data[k]||"")]));
  const s=rows.map(r=>r.map(v=>{v=String(v);if(/^[=+\-@]/.test(v))v="'"+v;return '"'+v.replace(/"/g,'""')+'"'}).join(",")).join("\n");
